@@ -2,6 +2,7 @@ return {
   {
     "akinsho/toggleterm.nvim",
     version = "*",
+    cmd = { "Docker", "Aws", "Cdk", "ToggleTerm" },
     opts = {
       size = 20,
       open_mapping = [[<C-\>]],
@@ -12,6 +13,26 @@ return {
       require("toggleterm").setup(opts)
       -- ターミナルモードからEscでnormal modeに戻る
       vim.keymap.set("t", "<Esc><Esc>", [[<C-\><C-n>]], { desc = "Exit terminal mode" })
+
+      -- CLI を float ターミナルで実行するユーザーコマンドを登録する。
+      -- 例: :Docker compose up -d --build / :Aws s3 ls / :Cdk deploy
+      -- プロジェクトルートで走らせ、ログを読めるよう終了後も開いたままにする。
+      local function register_cli(name, bin)
+        vim.api.nvim_create_user_command(name, function(o)
+          local root = vim.fs.root(0, { "docker-compose.yml", "compose.yml", "pyproject.toml", ".git" })
+            or vim.fn.getcwd()
+          require("toggleterm.terminal").Terminal:new({
+            cmd = bin .. " " .. o.args,
+            dir = root,
+            direction = "float",
+            close_on_exit = false,
+          }):toggle()
+        end, { nargs = "+", desc = "Run " .. bin .. " in a toggleterm float" })
+      end
+
+      register_cli("Docker", "docker")
+      register_cli("Aws", "aws")
+      register_cli("Cdk", "cdk")
     end,
     keys = {
       { "<leader>tt", "<cmd>ToggleTerm direction=horizontal<cr>", desc = "Terminal (horizontal)" },
