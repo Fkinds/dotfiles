@@ -1,6 +1,6 @@
 -- コマンドラインを中央ポップアップではなく、従来どおり画面最下部に表示する。
--- さらに「:」コマンドライン先頭に「カレントディレクトリ + uv の Python バージョン」を
--- プレフィックスとして表示する。
+-- さらに「:」コマンドライン先頭に「Python アイコン + uv の Python バージョン」を
+-- プレフィックスとして表示する（色付けはしない）。
 --
 -- noice は cmdline format の icon を毎レンダリングで config から読み直すため、
 -- icon 文字列を更新するだけで動的なプレフィックスになる。プロジェクトや作業ディレクトリが
@@ -8,13 +8,14 @@
 local python_version = require("util.python_version")
 
 -- 「:」cmdline 先頭に出すプレフィックス文字列を組み立てる。
+-- 表示するのは Python アイコン + uv のバージョンのみ。
+-- Python バージョンを判定できないプロジェクトでは nil を返し、プレフィックスを出さない。
 local function cmdline_prefix()
-  local cwd = vim.fn.fnamemodify(vim.fn.getcwd(), ":~")
   local version = python_version.get()
-  if version ~= "" then
-    return cwd .. "  󰌠 " .. version
+  if version == "" then
+    return nil
   end
-  return cwd
+  return " 󰌠 " .. version .. " "
 end
 
 -- 現在の状態に合わせて noice の cmdline icon を更新する。

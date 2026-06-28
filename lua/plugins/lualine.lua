@@ -10,5 +10,16 @@ return {
     if c and c[4] then
       c[4] = { breadcrumb() }
     end
+
+    -- neo-tree が表示中のディレクトリを右側に常時表示する
+    if opts.sections and opts.sections.lualine_x then
+      table.insert(opts.sections.lualine_x, 1, {
+        function()
+          return require("util.neo_tree_cwd").path()
+        end,
+        icon = "󰉋",
+        color = { fg = "#7aa2f7" },
+      })
+    end
   end,
 }
