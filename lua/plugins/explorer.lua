@@ -11,8 +11,10 @@ return {
     "nvim-neo-tree/neo-tree.nvim",
     opts = {
       filesystem = {
-        bind_to_cwd = true,
-        follow_current_file = { enabled = true },
+        -- cwd にルートを固定しない。開いたファイルに追従させる（下記参照）
+        bind_to_cwd = false,
+        -- 現在のバッファのファイルをツリー内で展開・ハイライトして追従する
+        follow_current_file = { enabled = true, leave_dirs_open = false },
         filtered_items = {
           visible = true,         -- 隠しファイルを表示
           hide_dotfiles = false,  -- .ファイルを隠さない
