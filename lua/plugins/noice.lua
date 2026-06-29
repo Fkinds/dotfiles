@@ -6,6 +6,7 @@
 -- icon 文字列を更新するだけで動的なプレフィックスになる。プロジェクトや作業ディレクトリが
 -- 変わるタイミング（DirChanged / BufEnter）でのみ再計算すれば十分。
 local python_version = require("util.python_version")
+local neo_tree_cwd = require("util.neo_tree_cwd")
 
 -- noice の treesitter ハイライトをバッファ境界内にクランプするガード。
 --
@@ -46,8 +47,12 @@ local function install_highlight_guard()
   end
 end
 
--- 現在バッファのファイルパスを「末尾2階層（親フォルダ + ファイル名）」で返す。
--- 例: …/examples/checkout.py → "examples/checkout.py"
+-- 現在バッファのファイルパスを返す。
+-- neo-tree のルート（`.` で確定したディレクトリ）配下なら、そのルート起点の
+-- 相対パスに固定して表示する。例: ルート ~/Work/poker のとき
+--   ~/Work/poker/backend/views.py → "./backend/views.py"
+--   ルートそのもの               → "."
+-- ルート外 / ルート取得失敗時は従来どおり末尾2階層（親フォルダ + ファイル名）。
 -- 通常ファイル以外（neo-tree・ターミナル・無名バッファ等）は空文字列。
 local function current_file_path()
   if vim.bo.buftype ~= "" then
@@ -57,6 +62,22 @@ local function current_file_path()
   if name == "" then
     return ""
   end
+  name = vim.fn.fnamemodify(name, ":p") -- 絶対パスに正規化
+
+  -- neo-tree ルート起点の相対パスに固定する。
+  local root = neo_tree_cwd.root()
+  if root ~= "" then
+    root = vim.fn.fnamemodify(root, ":p"):gsub("/$", "") -- 末尾スラッシュを除去
+    if name == root then
+      return "."
+    end
+    local prefix = root .. "/"
+    if name:sub(1, #prefix) == prefix then
+      return "./" .. name:sub(#prefix + 1)
+    end
+  end
+
+  -- ルート外 / 取得失敗時のフォールバック: 末尾2階層
   local tail = vim.fn.fnamemodify(name, ":t") -- checkout.py
   local parent = vim.fn.fnamemodify(name, ":h:t") -- examples
   if parent == "" or parent == "." then
@@ -111,7 +132,9 @@ return {
       lang = "vim",
     }, opts.cmdline.format.cmdline or {}, { icon = cmdline_prefix() })
 
-    vim.api.nvim_create_autocmd({ "DirChanged", "BufEnter" }, {
+    -- CmdlineEnter: neo-tree の `.`（set_root）は bind_to_cwd=false のため cwd を
+    -- 変えず DirChanged が出ない。`:` を開く直前に再計算すれば最新ルートを必ず拾える。
+    vim.api.nvim_create_autocmd({ "DirChanged", "BufEnter", "CmdlineEnter" }, {
       group = vim.api.nvim_create_augroup("noice_cmdline_prefix", { clear = true }),
       callback = refresh_cmdline_prefix,
     })
