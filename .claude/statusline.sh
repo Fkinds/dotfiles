@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Claude Code statusline (Powerline style): dir > branch > python
+# Claude Code statusline (Powerline style): repo > branch > python
 # 三角区切り () と git アイコン () は Nerd Font / Powerline フォントが必要。
 input=$(cat)
 
@@ -16,9 +16,10 @@ if [ -z "$dir" ]; then
 fi
 [ -n "$dir" ] && cd "$dir" 2>/dev/null
 
-# ホームを ~ に省略したフルパス（nvim-tree のルートと直接見比べられる）
-name=${dir:-$PWD}
-name=${name/#$HOME/\~}
+# フルパスではなく git リポジトリ名（= toplevel の basename）だけを出す。
+# git 管理外なら現在ディレクトリ名にフォールバックする。
+repo_root=$(git rev-parse --show-toplevel 2>/dev/null)
+name=$(basename "${repo_root:-${dir:-$PWD}}")
 branch=$(git branch --show-current 2>/dev/null)
 
 # uv が解決する Python（.python-version のピン留めも反映）。無ければ system python3 にフォールバック。
