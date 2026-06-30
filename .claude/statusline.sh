@@ -41,24 +41,26 @@ bg() { printf '\033[48;5;%sm' "$1"; }
 fg() { printf '\033[38;5;%sm' "$1"; }
 
 out=""
-
-# Directory segment
-out+="$(bg $DIR_BG)$(fg $DIR_FG) ${FOLDER} ${name} "
-prev_bg=$DIR_BG
+prev_bg=""
 
 # Git branch segment
 if [ -n "$branch" ]; then
-  out+="$(bg $GIT_BG)$(fg $prev_bg)${SEP}$(fg $GIT_FG) ${GIT} ${branch} "
+  out+="$(bg $GIT_BG)$(fg $GIT_FG) ${GIT} ${branch} "
   prev_bg=$GIT_BG
 fi
 
 # Python segment
 if [ -n "$py" ]; then
-  out+="$(bg $PY_BG)$(fg $prev_bg)${SEP}$(fg $PY_FG) 🐍 ${py} "
+  if [ -n "$prev_bg" ]; then
+    out+="$(bg $PY_BG)$(fg $prev_bg)${SEP}"
+  else
+    out+="$(bg $PY_BG)"
+  fi
+  out+="$(fg $PY_FG) 🐍 ${py} "
   prev_bg=$PY_BG
 fi
 
 # Trailing separator back to terminal background
-out+="${RESET}$(fg $prev_bg)${SEP}${RESET}"
+[ -n "$prev_bg" ] && out+="${RESET}$(fg $prev_bg)${SEP}${RESET}"
 
 printf '%s' "$out"
