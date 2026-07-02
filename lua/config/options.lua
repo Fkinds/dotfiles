@@ -18,3 +18,7 @@ opt.spelllang:append("cjk")
 -- 個人の好み
 opt.colorcolumn = "80"
 opt.scrolloff = 10
+
+-- プロジェクトローカル設定（repo 直下の .nvim.lua）を読み込む
+-- 初回は信頼確認が出るので :trust で許可する（:h exrc / :h trust）
+opt.exrc = true
