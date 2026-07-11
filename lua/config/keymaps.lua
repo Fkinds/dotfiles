@@ -65,6 +65,7 @@ map("<leader>ga", "<cmd>Git add .<cr>", "Git add .")
 map("<leader>gA", "<cmd>Git add --all<cr>", "Git add --all")
 map("<leader>gp", "<cmd>Git push origin HEAD<cr>", "Git push origin HEAD")
 map("<leader>gP", "<cmd>Git push --force-with-lease<cr>", "Git push --force-with-lease")
+map("<leader>gu", "<cmd>Git pull --rebase<cr>", "Git pull --rebase")
 map("<leader>gc", ai_commit, "Git commit (Claude 生成メッセージ)")
 map("<leader>gx", "<cmd>Git commit --fixup HEAD<cr>", "Git commit --fixup HEAD")
 map("<leader>gr", "<cmd>Git rebase -i --autosquash origin/main<cr>", "Git rebase -i --autosquash origin/main")
@@ -84,3 +85,22 @@ map("<leader>gW", function()
     vim.cmd("Git switch -c " .. vim.fn.fnameescape(name))
   end)
 end, "Git switch -c (new branch)")
+
+-- ───────────────────────────────────────────────────────────────────
+-- Protocol ⇄ Impl ジャンプ（命名規約 Xxx ⇄ XxxImpl ベース）
+-- injector の DI バインディングは実行時情報のため LSP では追えない。
+-- 代わりにカーソル下の語を snacks grep で `class <名前>` として引き、
+-- 定義行へ飛ぶ。`\b` により Protocol→Impl / Impl→Protocol を誤爆なく切替。
+-- ───────────────────────────────────────────────────────────────────
+map("<leader>ci", function()
+  local word = vim.fn.expand("<cword>")
+  if word == "" then
+    return vim.notify("カーソル下にシンボルがありません", vim.log.levels.WARN)
+  end
+  local target = word:match("Impl$") and word:gsub("Impl$", "") or (word .. "Impl")
+  require("snacks").picker.grep({
+    search = "class " .. target .. "\\b",
+    regex = true,
+    title = "Jump: " .. target,
+  })
+end, "Protocol ⇄ Impl ジャンプ")

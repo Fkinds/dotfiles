@@ -5,9 +5,13 @@
 -- Ensure ~/.local/bin is in PATH for uv and other tools
 vim.env.PATH = vim.env.HOME .. "/.local/bin:" .. vim.env.PATH
 
--- Python: pyright ではなく ty（Astral 製、ruff と同じエコシステム）を LSP/型チェッカーに使う
--- lang.python extra がこの値を読み、pyright を無効化して ty + ruff に切り替える
-vim.g.lazyvim_python_lsp = "ty"
+-- Python: LSP/型チェッカーに basedpyright を使う（pyright/ty は無効化）
+-- ty は Django の TextChoices（ChoicesType メタクラス）を解釈できず、
+-- `State.QUEUED` を tuple[str, str] と誤検知する（astral-sh/ty#3535, open）。
+-- basedpyright は django-stubs を読んで正しく enum メンバーとして解決する。
+-- ※ django-stubs を含むプロジェクト venv を basedpyright が参照する必要がある。
+-- lang.python extra がこの値を読み、対応する LSP に切り替える。
+vim.g.lazyvim_python_lsp = "basedpyright"
 
 local opt = vim.opt
 
