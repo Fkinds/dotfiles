@@ -71,7 +71,12 @@ map("<leader>gx", "<cmd>Git commit --fixup HEAD<cr>", "Git commit --fixup HEAD")
 map("<leader>gr", "<cmd>Git rebase -i --autosquash origin/main<cr>", "Git rebase -i --autosquash origin/main")
 map("<leader>gf", "<cmd>Git fetch<cr>", "Git fetch")
 
--- ブランチ切替: snacks のブランチ picker で選んで switch
+-- ───────────────────────────────────────────────────────────────────
+-- ブランチ切替（checkout は使わず switch に統一）
+-- snacks picker 側の `git checkout` 排除は lua/plugins/snacks-git.lua を参照。
+-- ───────────────────────────────────────────────────────────────────
+
+-- git switch: ブランチ picker で選んで切替
 map("<leader>gw", function()
   require("snacks").picker.git_branches()
 end, "Git switch (branch picker)")
@@ -85,6 +90,12 @@ map("<leader>gW", function()
     vim.cmd("Git switch -c " .. vim.fn.fnameescape(name))
   end)
 end, "Git switch -c (new branch)")
+
+-- detached HEAD で切替: git switch --detach <commit>
+-- コミット履歴 picker から選ぶ（confirm は snacks-git.lua で switch --detach 化済み）
+map("<leader>gD", function()
+  require("snacks").picker.git_log()
+end, "Git switch --detach (commit picker)")
 
 -- ───────────────────────────────────────────────────────────────────
 -- Protocol ⇄ Impl ジャンプ（命名規約 Xxx ⇄ XxxImpl ベース）
