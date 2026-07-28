@@ -1,0 +1,127 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push:*)",
+      "Bash(git pull *)",
+      "Bash(git fetch *)",
+      "Bash(git checkout *)",
+      "Bash(git switch *)",
+      "Bash(git stash *)",
+      "Bash(git cherry-pick *)",
+      "Bash(git rebase *)",
+      "Bash(git rev-list *)",
+      "Bash(gh pr:*)",
+      "Bash(gh run:*)",
+      "Bash(gh api *)",
+      "Bash(gh auth *)",
+      "Bash(poetry install*)",
+      "Bash(poetry check)",
+      "Bash(poetry env info)",
+      "Bash(poetry run pytest *)",
+      "Bash(python -m py_compile *)",
+      "Bash(uv run --group docs mkdocs build *)",
+      "Bash(npm run *)",
+      "Bash(npx prettier *)",
+      "Bash(npx tsc *)",
+      "Bash(pnpm tsc *)",
+      "Bash(npx cdk synth *)",
+      "Bash(npx cdk diff *)",
+      "Bash(npx cdk list*)",
+      "Bash(pkill -9 -f pytest)",
+      "Bash(pkill -9 -f python)",
+      "Read(//Users/kogaharawataru/Work/**)",
+      "Read(//Users/kogaharawataru/Downloads/**)",
+      "Read(//Users/kogaharawataru/.claude/**)",
+      "Read(//tmp/ancillary_test_data/**)",
+      "Read(//private/tmp/ancillary_test_data/**)",
+      "WebSearch",
+      "WebFetch(domain:docs.github.com)"
+    ],
+    "additionalDirectories": [
+      "/Users/kogaharawataru/Work/kraken-hub/src/tests/functional/accounts/usecases/migration_ddt/case_electricity_only",
+      "/tmp",
+      "/Users/kogaharawataru/Work/kraken-hub",
+      "/Users/kogaharawataru/Work/kraken-hub/.hypothesis",
+      "/Users/kogaharawataru/.claude/agents",
+      "/Users/kogaharawataru/Work/team-dd-training-tg-repos/team-dd-training-yamanaka/docs/reviews"
+    ],
+    "deny": [
+      "Bash(git push --force origin main)",
+      "Bash(git push --force origin master)",
+      "Bash(git push -f origin main)",
+      "Bash(git push -f origin master)",
+      "Bash(git push --force-with-lease origin main)",
+      "Bash(git push --force-with-lease origin master)"
+    ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.claude/statusline.sh",
+    "padding": 0
+  },
+  "enabledPlugins": {
+    "lua-lsp@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true
+  },
+  "language": "日本語",
+  "sandbox": {
+    "excludedCommands": ["gh", "aws", "docker"],
+    "credentials": {
+      "files": [
+        {
+          "path": "~/.aws",
+          "mode": "deny"
+        },
+        {
+          "path": "~/.ssh",
+          "mode": "deny"
+        },
+        {
+          "path": "~/.kube",
+          "mode": "deny"
+        },
+        {
+          "path": "~/.docker/config.json",
+          "mode": "deny"
+        }
+      ]
+    },
+    "enabled": false,
+    "network": {
+      "allowedDomains": [
+        "pypi.org",
+        "files.pythonhosted.org",
+        "registry.npmjs.org",
+        "github.com",
+        "api.github.com",
+        "codeload.github.com",
+        "objects.githubusercontent.com",
+        "raw.githubusercontent.com",
+        "*.amazonaws.com",
+        "registry-1.docker.io",
+        "auth.docker.io",
+        "production.cloudflare.docker.com",
+        "ghcr.io"
+      ]
+    }
+  },
+  "tui": "fullscreen",
+  "autoCompactEnabled": true,
+  "includeCoAuthoredBy": false,
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Glass.aiff 2>/dev/null || true",
+            "timeout": 5,
+            "async": true
+          }
+        ]
+      }
+    ]
+  }
+}

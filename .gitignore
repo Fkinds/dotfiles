@@ -6,3 +6,8 @@ debug
 foo.*
 *.log
 data
+
+# Claude Code: ローカル専用・内部生成物
+.claude/.cc-writes/
+.claude/settings.local.json
+.claude/*.bak-*
