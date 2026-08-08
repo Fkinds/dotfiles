@@ -223,7 +223,8 @@ my-skill/
 4. レビュー指摘は fixup コミット(`git commit --fixup <hash>`)で対応し、マージ前に
    `git rebase -i --autosquash main` で畳み込む。
 
-詳細は [README.md](../README.md) のブランチ運用ルールに従う。
+詳細はリポジトリの運用ルールに従う。**このリポジトリ(dotfiles)での読み替えは
+ルートの `CLAUDE.md` を見る** — 配置先・pre-commit・提出手順が上記と異なる。
 
 ## チェックリスト
 
