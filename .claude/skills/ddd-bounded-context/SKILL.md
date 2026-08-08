@@ -21,6 +21,8 @@ allowed-tools:
 [ddd-modeling-discovery](../ddd-modeling-discovery/SKILL.md)、
 ここでの投資判断(コア/支援/汎用)を既存コードの移行範囲に使う場合は
 [ddd-legacy-refactoring](../ddd-legacy-refactoring/SKILL.md)。
+コンテキストの内部でモジュールをどう割るかは
+[component-design](../component-design/SKILL.md)。
 
 ---
 

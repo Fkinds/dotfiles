@@ -30,6 +30,10 @@ allowed-tools:
 [ddd-django-pitfalls](../ddd-django-pitfalls/SKILL.md)、
 既存の `XxxService` を解体する手順は
 [ddd-legacy-refactoring](../ddd-legacy-refactoring/SKILL.md)。
+**そもそもその境界を引くべきか**、Presenter / 出力ポートを導入するかの判断は
+[clean-architecture-boundaries](../clean-architecture-boundaries/SKILL.md)、
+原則としての依存性逆転は
+[solid-principles](../solid-principles/SKILL.md)。
 
 ---
 
