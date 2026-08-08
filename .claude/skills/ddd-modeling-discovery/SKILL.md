@@ -21,6 +21,10 @@ allowed-tools:
 [ddd-bounded-context](../ddd-bounded-context/SKILL.md)、
 既存コードから始める場合は
 [ddd-legacy-refactoring](../ddd-legacy-refactoring/SKILL.md)。
+見つけたライフサイクルの実装は
+[ddd-state-transition](../ddd-state-transition/SKILL.md)、
+複数ステップの業務プロセスは
+[ddd-long-running-process](../ddd-long-running-process/SKILL.md)。
 
 ---
 

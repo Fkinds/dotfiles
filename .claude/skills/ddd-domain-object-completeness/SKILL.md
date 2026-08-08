@@ -31,6 +31,10 @@ allowed-tools:
 [ddd-modeling-primitives](../ddd-modeling-primitives/SKILL.md)、
 既存コードから移行する場合は
 [ddd-legacy-refactoring](../ddd-legacy-refactoring/SKILL.md)。
+状態とライフサイクルの設計は
+[ddd-state-transition](../ddd-state-transition/SKILL.md)、
+置き場所が正しいのに書きにくいと感じたら
+[ddd-supple-design](../ddd-supple-design/SKILL.md)。
 
 ---
 

@@ -24,6 +24,8 @@ usecase の責務は
 **すでにある `XxxService` を解体する**手順は
 [ddd-legacy-refactoring](../ddd-legacy-refactoring/SKILL.md)
 (ここは新規に作る前の判断を扱う)。
+仕様を組み合わせて宣言的に書く設計全般は
+[ddd-supple-design](../ddd-supple-design/SKILL.md)。
 
 ---
 
