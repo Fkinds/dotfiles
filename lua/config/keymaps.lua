@@ -58,6 +58,17 @@ local function ai_commit()
   end)
 end
 
+-- pull --rebase の取得元を現在のブランチに固定する。
+-- 引数なしの `Git pull --rebase` は upstream 設定に従うため未設定だと失敗し、
+-- `origin HEAD` は push と違ってリモート側の既定ブランチに解決されてしまう。
+local function pull_rebase_current_branch()
+  local branch = vim.trim(vim.fn.system({ "git", "rev-parse", "--abbrev-ref", "HEAD" }))
+  if vim.v.shell_error ~= 0 or branch == "" or branch == "HEAD" then
+    return vim.notify("現在のブランチを取得できません（detached HEAD?）", vim.log.levels.ERROR)
+  end
+  vim.cmd("Git pull --rebase origin " .. vim.fn.fnameescape(branch))
+end
+
 map("<leader>gs", "<cmd>Git<cr>", "Git status (fugitive)")
 map("<leader>gl", "<cmd>Git log --oneline<cr>", "Git log --oneline")
 map("<leader>gz", "<cmd>Git stash<cr>", "Git stash")
@@ -65,7 +76,7 @@ map("<leader>ga", "<cmd>Git add .<cr>", "Git add .")
 map("<leader>gA", "<cmd>Git add --all<cr>", "Git add --all")
 map("<leader>gp", "<cmd>Git push origin HEAD<cr>", "Git push origin HEAD")
 map("<leader>gP", "<cmd>Git push --force-with-lease<cr>", "Git push --force-with-lease")
-map("<leader>gu", "<cmd>Git pull --rebase<cr>", "Git pull --rebase")
+map("<leader>gu", pull_rebase_current_branch, "Git pull --rebase origin <current branch>")
 map("<leader>gc", ai_commit, "Git commit (Claude 生成メッセージ)")
 map("<leader>gx", "<cmd>Git commit --fixup HEAD<cr>", "Git commit --fixup HEAD")
 map("<leader>gr", "<cmd>Git rebase -i --autosquash origin/main<cr>", "Git rebase -i --autosquash origin/main")
