@@ -15,6 +15,22 @@ Neovim (LazyVim) と Claude Code の個人設定リポジトリ。
 この注意を出す。`~/.claude/hooks` 経由で読まれるので**全プロジェクトで効く**。
 無効にするなら `settings.json` の `hooks.PreToolUse` を消す。
 
+### 外部スキル (`gh skill`)
+
+公式配布のスキルは自作せず `gh skill` で入れる。**git では追跡しない**
+(`.gitignore` 済み)。frontmatter の `metadata.github-repo` が目印。
+
+```bash
+gh skill install github/gh-stack gh-stack --agent claude-code --scope user
+gh skill list      # 導入済み一覧
+gh skill update    # 更新
+```
+
+導入済み: `gh-stack`(要 `gh extension install github/gh-stack`)。
+
+**自作スキルは、外部スキルが持たない運用ルールだけを持つ。** コマンドの使い方を
+書き写すと、本体の更新に追従できなくなる。
+
 ### `skill-authoring` の前提のうち、このリポジトリに当てはまらないもの
 
 `skill-authoring` は社内スキル集リポジトリ向けに書かれている。次の 3 点は読み替える。
