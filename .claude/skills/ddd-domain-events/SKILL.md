@@ -16,7 +16,13 @@ allowed-tools:
 集約の境界とリポジトリは
 [ddd-aggregate-repository-boundary](../ddd-aggregate-repository-boundary/SKILL.md)、
 集約内部のオブジェクト設計は
-[ddd-domain-object-completeness](../ddd-domain-object-completeness/SKILL.md)。
+[ddd-domain-object-completeness](../ddd-domain-object-completeness/SKILL.md)、
+イベントをディスパッチする側(トランザクション境界)は
+[ddd-application-layer](../ddd-application-layer/SKILL.md)、
+イベントで読み取りモデルを更新する場合は
+[ddd-read-model-cqrs](../ddd-read-model-cqrs/SKILL.md)、
+コンテキストをまたぐ統合としてのイベントは
+[ddd-bounded-context](../ddd-bounded-context/SKILL.md)。
 
 ---
 
@@ -154,7 +160,7 @@ class CancelOrder:
 
 Django なら `transaction.on_commit()` にディスパッチを載せるのが素直。ただし
 **トランザクション管理は usecase / インフラの責務**で、ドメイン層に `django.db` を
-持ち込まない。
+持ち込まない([ddd-application-layer](../ddd-application-layer/SKILL.md))。
 
 ### 配送を確実にするなら outbox
 

@@ -17,7 +17,13 @@ allowed-tools:
 集約内部のオブジェクト設計(不変条件、値オブジェクト、エンティティ)は
 [ddd-domain-object-completeness](../ddd-domain-object-completeness/SKILL.md)、
 集約をまたぐ整合性は
-[ddd-domain-events](../ddd-domain-events/SKILL.md)。
+[ddd-domain-events](../ddd-domain-events/SKILL.md)、
+リポジトリを呼び出してトランザクションを張る側は
+[ddd-application-layer](../ddd-application-layer/SKILL.md)、
+検索・一覧などの読み取りは
+[ddd-read-model-cqrs](../ddd-read-model-cqrs/SKILL.md)。
+そもそもどのコンテキストに属する集約かは
+[ddd-bounded-context](../ddd-bounded-context/SKILL.md)。
 
 ---
 
@@ -108,7 +114,8 @@ class OrderRepository(ABC):
 - **部分取得・部分更新のメソッドを生やさない。** `update_status(order_id, status)` は
   ドメインの振る舞いをリポジトリに漏らしている。`order.cancel()` → `save(order)` にする。
 - **クエリ集にしない。** 画面のための検索(絞り込み、集計、一覧)はリポジトリではなく
-  **read model / query service** の責務。リポジトリに `find_by_status_and_date_range_with_customer`
+  **read model / query service** の責務([ddd-read-model-cqrs](../ddd-read-model-cqrs/SKILL.md))。
+  リポジトリに `find_by_status_and_date_range_with_customer`
   のようなメソッドが増え始めたら、それは読み取りであって集約の再構成ではない。
 
 ---

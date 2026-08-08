@@ -17,7 +17,13 @@ allowed-tools:
 集約の境界の引き方と永続化は
 [ddd-aggregate-repository-boundary](../ddd-aggregate-repository-boundary/SKILL.md)、
 集約をまたぐ整合性は
-[ddd-domain-events](../ddd-domain-events/SKILL.md)。
+[ddd-domain-events](../ddd-domain-events/SKILL.md)、
+ドメインオブジェクトを組み立てる側は
+[ddd-application-layer](../ddd-application-layer/SKILL.md)、
+どのオブジェクトにも属さないロジックの置き場所は
+[ddd-domain-service-specification](../ddd-domain-service-specification/SKILL.md)。
+そもそもどこにモデルの境界を引くかは
+[ddd-bounded-context](../ddd-bounded-context/SKILL.md)。
 
 ---
 
@@ -159,7 +165,7 @@ class Order(Entity):
 - ビジネスロジックは `domain/` の値オブジェクト / エンティティ / ドメインサービスに置く — Django モデル(永続化専用)や serializer、usecase には置かない。
 - 生の状態アクセスではなく、**意図を表す振る舞い**を公開する: `order.status = "cancelled"` ではなく `order.cancel()`。
 - 読み取りは `@property` のみで公開する。setter は存在しない(`frozen` が強制する)。
-- 複数の集約に自然にまたがるロジックは**ドメインサービス**(`domain/services/`)に置く。stdlib のみ。これがエンティティの外にロジックを置く唯一の正当な場所であり、usecase がエンティティのフィールドに手を突っ込むのは決して認められない。
+- 複数の集約に自然にまたがるロジックは**ドメインサービス**(`domain/services/`)に置く。stdlib のみ。これがエンティティの外にロジックを置く唯一の正当な場所であり、usecase がエンティティのフィールドに手を突っ込むのは決して認められない。名乗ってよい条件と乱用の見分け方は [ddd-domain-service-specification](../ddd-domain-service-specification/SKILL.md)。
 
 ### 検出シグナル(いずれか1つでも該当 = 貧血。設計を直す)
 
