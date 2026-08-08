@@ -1,11 +1,15 @@
 #!/usr/bin/env bash
 # 起動中の Claude Code セッションを 1 画面に一覧する。Ghostty のタブを 1 枚使って常駐させる。
 #
-# 1 セッションを 2 段で出す。
-#   上段: 状態 / リポジトリ / ブランチ / 経過 / セッション ID
-#   下段: そのセッションが使っているサブエージェントとスキル
+# 要対応 / 稼働中 / 待機 の 3 セクションに分け、1 セッションを最大 3 行で出す。
+#   名前行: グリフ + リポジトリ名(状態によらず同じ明るさ)
+#   メタ行: 状態 / ブランチ / 経過 / セッション ID(状態の色が乗る)
+#   活動行: 使っているサブエージェントと /スキル(何も無ければ出さない)
 #
-# 上段の状態は .claude/hooks/agent-state.sh が ~/.claude/agent-state/ に書く。下段は
+# 固定幅の列を持たないので、Ghostty の全幅でも nvim の 40 桁サイドバーでも折り返さない。
+# 溢れる文字列は削ってよいものから順に切る。
+#
+# 状態は .claude/hooks/agent-state.sh が ~/.claude/agent-state/ に書く。活動行は
 # セッションの transcript(JSONL)から Agent / Task / Skill の tool_use を拾う。どちらも
 # 読むだけで、Claude Code には一切干渉しない。
 #
@@ -23,31 +27,54 @@ C_RED=$'\033[1;31m'
 C_YELLOW=$'\033[33m'
 C_CYAN=$'\033[36m'
 C_GREEN=$'\033[32m'
-C_HEAD=$'\033[1;4m'
-C_SUB=$'\033[2;37m' # 下段(サブエージェント稼働なし)
-C_SUB_RUN=$'\033[36m' # 下段(サブエージェント稼働中)
+C_HEAD=$'\033[1m'
+C_NAME=$'\033[1m'     # 名前行。状態の色はグリフとメタ行に乗せ、名前は明るさを一定に保つ
+C_SEC=$'\033[2m'      # セクション見出し
+C_ACT=$'\033[2;37m'   # 活動行(サブエージェント稼働なし)
+C_ACT_RUN=$'\033[36m' # 活動行(サブエージェント稼働中)
 
-# 状態名 → 並び順・表示ラベル。並び順が小さいほど上に出す(要対応を最優先)。
-# ラベルは全角なので、表示幅 8 桁に揃うところまで空白を含めて持つ。column には頼らない
-# (BSD column も ANSI エスケープも全角幅を数え違える)。
+# 状態名 → 並び順 / セクション / ラベル / ラベルの表示幅 / グリフ。
+# 並び順が小さいほど上に出す(要対応を最優先)。全角ラベルは printf の桁指定と表示幅が
+# 合わないため、幅を数値で持って自分で詰める(column も ANSI も全角幅を数え違える)。
+# グリフは色が出ない環境でも読めるよう、状態ごとに形を変える。
 meta() {
   case "$1" in
-  blocked) printf '0\t承認待ち' ;;
-  attention) printf '1\t要対応  ' ;;
-  working) printf '2\t処理中  ' ;;
-  done) printf '3\t完了    ' ;;
-  *) printf '4\t待機    ' ;;
+  blocked) printf '0\t要対応\t承認待ち\t8\t◉' ;;
+  attention) printf '1\t要対応\t要対応\t6\t◉' ;;
+  working) printf '2\t稼働中\t処理中\t6\t●' ;;
+  done) printf '3\t稼働中\t完了\t4\t●' ;;
+  *) printf '4\t待機\t待機\t4\t○' ;;
   esac
 }
 
 paint() {
   case "$1" in
-  *承認待ち*) printf '%s' "$C_RED" ;;
-  *要対応*) printf '%s' "$C_YELLOW" ;;
-  *処理中*) printf '%s' "$C_CYAN" ;;
-  *完了*) printf '%s' "$C_GREEN" ;;
+  blocked) printf '%s' "$C_RED" ;;
+  attention) printf '%s' "$C_YELLOW" ;;
+  working) printf '%s' "$C_CYAN" ;;
+  done) printf '%s' "$C_GREEN" ;;
   *) printf '%s' "$C_DIM" ;;
   esac
+}
+
+sec_width() {
+  case "$1" in
+  待機) printf '4' ;;
+  *) printf '6' ;;
+  esac
+}
+
+# 表示幅で切り詰める。リポジトリ名とブランチ名は ASCII 前提の近似で数える。
+# 末尾の … は曖昧幅だが、Ghostty は既定で半角に倒すのでここでは 1 桁として扱う。
+trim() {
+  local s=$1 max=$2
+  if [ "$max" -lt 1 ]; then
+    printf ''
+  elif [ "${#s}" -gt "$max" ]; then
+    printf '%s…' "${s:0:$((max - 1))}"
+  else
+    printf '%s' "$s"
+  fi
 }
 
 elapsed() {
@@ -68,7 +95,8 @@ term_cols() {
   case "$c" in
   '' | *[!0-9]*) c=$FALLBACK_COLS ;;
   esac
-  [ "$c" -lt 40 ] && c=40
+  # 固定幅の列を持たないので下限は低くてよい。24 桁あればメタ行が 1 行に収まる。
+  [ "$c" -lt 24 ] && c=24
   printf '%s' "$c"
 }
 
@@ -189,9 +217,7 @@ def tally(names):
                 break
         else:
             ordered.append((name, 1))
-    return ', '.join(
-        n if c == 1 else '%s x%d' % (n, c) for n, c in ordered[:MAX_ITEMS]
-    )
+    return [n if c == 1 else '%s x%d' % (n, c) for n, c in ordered[:MAX_ITEMS]]
 
 
 def latest_unique(names):
@@ -201,7 +227,7 @@ def latest_unique(names):
         if name not in seen:
             seen.add(name)
             ordered.append(name)
-    return ', '.join(ordered[:MAX_ITEMS])
+    return ordered[:MAX_ITEMS]
 
 
 try:
@@ -225,7 +251,7 @@ for state_file in sorted(glob.glob(os.path.join(state_dir, '*.json'))):
     if not session_id:
         continue
 
-    running, agent_text, skill_text = 0, '', ''
+    running, items = 0, []
     path = transcript_path(session_id, state.get('transcript_path'))
     if path:
         try:
@@ -234,13 +260,15 @@ for state_file in sorted(glob.glob(os.path.join(state_dir, '*.json'))):
             entry = blank()
         fresh[path] = entry
         pending = [name for _, name in entry['pending']]
-        agent_text = tally(pending) if pending else latest_unique(entry['agents'])
-        skill_text = latest_unique(entry['skills'])
+        items = tally(pending) if pending else latest_unique(entry['agents'])
+        # スキルは頭に / を付けてサブエージェントと見分ける(呼び出し表記と同じ形)。
+        items = items + ['/' + name for name in latest_unique(entry['skills'])]
         running = 1 if pending or subagent_running(session_id) else 0
 
-    body = '└ agent: %s  skill: %s' % (agent_text or '-', skill_text or '-')
+    # 名前はどれも ASCII のスラグなので、表示幅は文字数で数えて足りる。
+    body = ', '.join(items)
     if len(body) > max_width:
-        body = body[:max_width - 1] + '~'
+        body = body[:max_width - 1] + '…'
     print('%s\t%d\t%s' % (session_id, running, body))
 
 try:
@@ -254,11 +282,12 @@ except OSError:
 PY
 }
 
-# $1: 下段の本文に使える桁数
+# $1: 各行の本文に使える桁数(左インデントと右余白を引いたもの)
 collect() {
-  local now acts f status cwd ts sid age prio label repo branch run sub
+  local avail=$1
+  local now acts f status cwd ts sid age prio section label lw glyph repo branch el run act used metaline
   now=$(date +%s)
-  acts=$(activity "$1")
+  acts=$(activity "$avail")
   shopt -s nullglob
   for f in "$STATE_DIR"/*.json; do
     IFS=$'\t' read -r status cwd ts sid < <(
@@ -272,58 +301,83 @@ collect() {
       continue
     fi
 
-    IFS=$'\t' read -r prio label < <(meta "$status")
+    IFS=$'\t' read -r prio section label lw glyph < <(meta "$status")
 
     repo=$(basename "${cwd:-?}")
     # macOS に timeout(1) は無いので直接呼ぶ。branch --show-current はローカル参照のみで完結する。
     branch=$(git -C "$cwd" branch --show-current 2>/dev/null)
+    [ -z "$branch" ] && branch='-'
+    el=$(elapsed "$age")
 
-    unset run sub
-    IFS=$'\t' read -r run sub < <(
+    # メタ行は「状態 · ブランチ · 経過 · ID」。区切り " · " は 3 桁。入り切らないときは
+    # まず ID を落とし、それでも溢れるならブランチを削る(状態と経過は削ると読めなくなる)。
+    used=$((lw + 3 + 3 + ${#el} + 3 + 8))
+    if [ $((used + ${#branch})) -le "$avail" ]; then
+      metaline="$label · $branch · $el · ${sid:0:8}"
+    else
+      metaline="$label · $(trim "$branch" $((avail - lw - 3 - 3 - ${#el}))) · $el"
+    fi
+
+    unset run act
+    IFS=$'\t' read -r run act < <(
       printf '%s\n' "$acts" | awk -F'\t' -v s="$sid" '$1 == s { print $2 "\t" $3; exit }'
     )
 
-    # 先頭の prio は並べ替え専用。描画時に落とす。以降は上段 / 稼働中 / 下段。
-    printf '%s\t%s %-16s %-24s %-6s %s\t%s\t%s\n' \
-      "$prio" "$label" "$repo" "${branch:--}" "$(elapsed "$age")" "${sid:0:8}" \
-      "${run:-0}" "${sub:-└ agent: -  skill: -}"
+    # 先頭の prio は並べ替え専用。描画時に落とす。
+    printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+      "$prio" "$section" "$glyph" "$status" "$(trim "$repo" "$avail")" \
+      "$metaline" "${run:-0}" "${act:-}"
   done
   shopt -u nullglob
 }
 
 render() {
-  local cols max rows count line top rest run bottom
+  local cols avail rows count section body n pad glyph status repo metaline run act
   cols=$(term_cols)
-  max=$((cols - 10)) # 下段のインデント 9 桁ぶんと右端の余白 1 桁を引く
-  [ "$max" -lt 20 ] && max=20
+  avail=$((cols - 3)) # 左インデント 2 桁と右端の余白 1 桁を引く
+  [ "$avail" -lt 20 ] && avail=20
 
-  rows=$(collect "$max" | sort -t$'\t' -k1,1 -k2,2 | cut -f2-)
+  rows=$(collect "$avail" | sort -t$'\t' -k1,1 -k5,5 | cut -f2-)
   count=$(printf '%s' "$rows" | grep -c . || true)
 
-  printf '%s\n' "${C_HEAD}Claude Code エージェント (${count})${C_RESET}"
-  printf '%s\n\n' "${C_DIM}$(date '+%H:%M:%S')  更新 1s  終了 Ctrl-C${C_RESET}"
+  pad=$((cols - 6 - ${#count} - 1)) # agents は 6 桁
+  [ "$pad" -lt 1 ] && pad=1
+  printf '%sagents%s%*s%s%s%s\n' "$C_HEAD" "$C_RESET" "$pad" '' "$C_DIM" "$count" "$C_RESET"
+  # 「時刻 + 更新 1s + 終了 Ctrl-C」で 30 桁。入らない幅では時刻だけにする。
+  if [ "$cols" -ge 30 ]; then
+    printf '%s\n' "${C_DIM}$(date '+%H:%M:%S')  更新 1s  終了 Ctrl-C${C_RESET}"
+  else
+    printf '%s\n' "${C_DIM}$(date '+%H:%M:%S')${C_RESET}"
+  fi
 
   if [ "$count" -eq 0 ]; then
-    printf '%s\n' "${C_DIM}起動中のセッションはありません${C_RESET}"
+    printf '\n%s\n' "${C_DIM}起動中のセッションはありません${C_RESET}"
     return
   fi
 
-  # 見出しは全角を含み printf の桁指定が表示幅と合わないため、空白を直接置いて data 行に揃える。
-  printf '%s\n' "${C_DIM}状態     リポジトリ       ブランチ                 経過   ID${C_RESET}"
-  while IFS= read -r line; do
-    [ -z "$line" ] && continue
-    top=${line%%$'\t'*}
-    rest=${line#*$'\t'}
-    run=${rest%%$'\t'*}
-    bottom=${rest#*$'\t'}
+  # セクション順は固定。該当セッションが無いセクションは見出しごと出さない。
+  for section in 要対応 稼働中 待機; do
+    body=$(awk -F'\t' -v s="$section" '$1 == s' <<<"$rows")
+    n=$(printf '%s' "$body" | grep -c . || true)
+    [ "$n" -eq 0 ] && continue
 
-    printf '%s%s%s\n' "$(paint "$top")" "$top" "$C_RESET"
-    if [ "$run" = "1" ]; then
-      printf '         %s%s%s\n' "$C_SUB_RUN" "$bottom" "$C_RESET"
-    else
-      printf '         %s%s%s\n' "$C_SUB" "$bottom" "$C_RESET"
-    fi
-  done <<<"$rows"
+    pad=$((cols - 1 - $(sec_width "$section") - ${#n} - 1)) # ▍が 1 桁、右端に 1 桁空ける
+    [ "$pad" -lt 1 ] && pad=1
+    printf '\n%s▍%s%*s%s%s\n' "$C_SEC" "$section" "$pad" '' "$n" "$C_RESET"
+
+    while IFS=$'\t' read -r _ glyph status repo metaline run act; do
+      [ -z "$repo" ] && continue
+      printf '%s%s%s %s%s%s\n' "$(paint "$status")" "$glyph" "$C_RESET" "$C_NAME" "$repo" "$C_RESET"
+      printf '  %s%s%s\n' "$(paint "$status")" "$metaline" "$C_RESET"
+      if [ -n "$act" ]; then
+        if [ "$run" = "1" ]; then
+          printf '  %s%s%s\n' "$C_ACT_RUN" "$act" "$C_RESET"
+        else
+          printf '  %s%s%s\n' "$C_ACT" "$act" "$C_RESET"
+        fi
+      fi
+    done <<<"$body"
+  done
 }
 
 if [ "${1:-}" = "--once" ]; then

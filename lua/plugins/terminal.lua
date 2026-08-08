@@ -4,8 +4,7 @@
 local dashboard = nil
 
 -- 幅は explorer(<leader>e / neo-tree)と揃える。狭い画面では画面幅の半分までに抑える。
--- 注意: 上段は「状態 8 + リポジトリ 16 + ブランチ 24 + 経過 6 + ID 8 + 区切り」で約 66 桁あり、
--- この幅では折り返して表が崩れる。下段(agent / skill)は端末幅に合わせて側が切り詰める。
+-- ダッシュボードは固定幅の列を持たず 24 桁まで縮むので、この幅でも折り返さない。
 local DASHBOARD_WIDTH = 40
 
 local function dashboard_size()
@@ -30,7 +29,7 @@ local function toggle_dashboard()
           vim.cmd("wincmd H")
         end
         vim.api.nvim_win_set_width(term.window, dashboard_size())
-        -- 他ウィンドウの開閉で幅が変わらないよう固定し、表が折り返さないようにする。
+        -- 他ウィンドウの開閉で幅が変わらないよう固定し、行が折り返さないようにする。
         vim.wo[term.window].winfixwidth = true
         vim.wo[term.window].wrap = false
       end,
