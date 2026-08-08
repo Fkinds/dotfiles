@@ -1,6 +1,6 @@
 ---
 name: ddd-application-layer
-description: アプリケーション層(ユースケース)の設計指針。ドメインを組み立てるだけの薄いオーケストレーション、1 ユースケース 1 クラス、トランザクション境界、入出力 DTO による境界の遮断、依存性注入と composition root、層の依存方向とディレクトリ構成、ドメイン例外の変換を扱う。usecase / application service を設計・レビューするとき、ビジネスロジックが usecase に溜まってきたとき、view や serializer から何を呼ぶか決めるとき、層の切り方に迷ったときに使う。
+description: アプリケーション層(ユースケース)の設計指針。ドメインを組み立てるだけの薄いオーケストレーション、1 ユースケース 1 クラス、トランザクション境界、入出力 DTO による境界の遮断、依存性注入と composition root の実装(ファクトリ関数・apps.py・スコープ・DI コンテナを入れる判断)、層の依存方向とディレクトリ構成、ドメイン例外の変換を扱う。usecase / application service を設計・レビューするとき、ビジネスロジックが usecase に溜まってきたとき、依存をどこで組み立てるか決めるとき、view や serializer から何を呼ぶか決めるときに使う。
 allowed-tools:
   - Read
   - Grep
@@ -198,12 +198,81 @@ class CancelOrder:
     def __init__(self, orders: OrderRepository, bus: EventBus) -> None: ...
 ```
 
-- 具象の選択は **composition root 1 か所**に閉じる(Django なら `apps.py` の
-  `ready()`、DI コンテナ、あるいは view 側のファクトリ関数)。
+- 具象の選択は **composition root 1 か所**に閉じる。
 - テストでは in-memory 実装を差し込む。**usecase のテストに DB は要らない**
   ([ddd-testing-strategy](../ddd-testing-strategy/SKILL.md))。
 - インフラを呼ぶ副作用(メール送信、外部 API)も抽象にする。usecase が
   `requests.post(...)` を直接書いたら、それはインフラ層の漏れ。
+
+### composition root の実装
+
+**ファクトリ関数から始める。** DI コンテナは、これで足りなくなってから。
+
+```python
+# infrastructure/factories.py  ← ここが composition root
+def build_cancel_order() -> CancelOrder:
+    return CancelOrder(DjangoOrderRepository(), DjangoEventBus())
+
+
+# interfaces/views.py
+class CancelOrderView(APIView):
+    def post(self, request, order_id):
+        usecase = build_cancel_order()          # 具象を知るのはここだけ
+        output = usecase.execute(CancelOrderCommand(...))
+```
+
+- **`infrastructure/` に置く。** ここだけが全層を知ってよい。`usecases/` や
+  `domain/` にファクトリを置くと、内側が外側を import することになる。
+- **view に `DjangoOrderRepository()` を直接書かない。** 差し替え点が
+  view の数だけ増える。
+- 設定値(API キー、URL)はここで `settings` から読んで**引数として渡す**。
+  usecase もドメインも `settings` を知らない
+  ([ddd-django-pitfalls](../ddd-django-pitfalls/SKILL.md))。
+
+### `apps.py` の `ready()` を使うとき
+
+シグナル配線やイベントハンドラの登録など、**起動時に 1 回だけ**やることはここ。
+
+```python
+class SalesConfig(AppConfig):
+    def ready(self) -> None:
+        from .infrastructure.events import register_handlers
+        register_handlers(event_bus)     # import は ready() の中で(循環回避)
+```
+
+- **`ready()` でリポジトリのインスタンスを作らない。** 起動時に 1 個作って
+  使い回すと、リクエスト間で状態を共有してしまう。
+- import は関数の内側に書く。モジュールトップに置くとアプリ読み込み中に
+  評価され、循環 import になりやすい。
+
+### スコープ — 使い捨てを既定にする
+
+| スコープ | 対象 | 判断 |
+| --- | --- | --- |
+| **リクエストごとに生成** | usecase、リポジトリ | **既定。**状態を持たないので生成コストは無視できる |
+| プロセス全体で共有 | 設定オブジェクト、接続プール | 状態がスレッドセーフなときだけ |
+
+**リポジトリを使い回さない。** Django の `objects` はリクエストごとの
+トランザクションと結びつくので、使い捨てが安全。
+
+### DI コンテナを入れるか
+
+**既定は入れない。** `dependency-injector` などは Django では過剰になりやすい。
+
+入れてよいのは、次が両方とも当てはまるとき。
+
+- ファクトリ関数が **20 個以上**になり、依存の重複が目立つ。
+- 環境(本番 / ステージング / テスト)で**実装を切り替える**必要が実在する。
+
+入れる場合も、**コンテナを知ってよいのは composition root だけ**。usecase が
+コンテナから依存を引きに行く(サービスロケータ)のは、注入ではない。
+
+```python
+# NG: サービスロケータ。依存がシグネチャに現れず、テストで差し替えにくい
+class CancelOrder:
+    def execute(self, ...):
+        orders = container.resolve(OrderRepository)
+```
 
 ---
 
@@ -221,6 +290,9 @@ class CancelOrder:
 - **変換は view / exception handler で 1 か所にまとめる。** usecase ごとに try/except を
   書き散らさない。DRF なら custom exception handler。
 - **握り潰さない。** `except Exception: pass` は、不変条件の違反を無かったことにする。
+- **業務上ありふれた否定的結果(却下・在庫切れ)を例外にしない。** それは失敗ではなく
+  結果なので、戻り値で返す
+  ([operation-result-design](../operation-result-design/SKILL.md))。
 - 「見つからない」をドメイン例外にしない。集約が存在しないのは**業務ルール違反ではなく
   アプリケーションの都合**。`OrderNotFound` はアプリケーション層に置く。
 
@@ -281,6 +353,11 @@ usecases/
 | usecase が集約をそのまま返す | 境界の外でドメインの振る舞いが呼べてしまう |
 | usecase が `Request` / serializer を受け取る | フレームワーク依存。テストに HTTP が要る |
 | usecase が具象リポジトリを `new` する | 差し替え不能。composition root へ |
+| view が具象を直接 `new` する | 差し替え点が view の数だけ増える |
+| ファクトリを `usecases/` や `domain/` に置く | 内側が外側を import することになる |
+| 依存をコンテナから引きに行く(サービスロケータ) | 依存がシグネチャに現れず、テストで差し替えにくい |
+| `ready()` でリポジトリを 1 個作って使い回す | リクエスト間で状態を共有してしまう |
+| 実装が 1 つなのに DI コンテナを入れる | 設定の複雑さだけが増える |
 | リポジトリや view がトランザクションを張る | 境界が多重化し、どこで確定するか分からなくなる |
 | usecase が複数の集約を保存する | 1 トランザクション 1 集約の違反。境界の誤り |
 | usecase が HTTP ステータスを知っている | 層の逆流。変換はインターフェース層で |
@@ -297,6 +374,10 @@ usecases/
 - [ ] 入力は Command DTO、出力は Output DTO。**集約をそのまま返していない**
 - [ ] usecase が Django / DRF のオブジェクト(`Request`・serializer・model)を受け取っていない
 - [ ] 依存は**抽象のみ**をコンストラクタ注入。具象の選択は composition root に閉じている
+- [ ] composition root が **`infrastructure/`** にある(内側に置いていない)
+- [ ] usecase / リポジトリを**リクエストごとに生成**している(起動時に作って使い回していない)
+- [ ] 依存をコンテナから引きに行っていない(サービスロケータになっていない)
+- [ ] DI コンテナを入れるなら、**ファクトリが 20 個以上 + 環境ごとの切り替えが実在**する
 - [ ] usecase のテストが DB なしで動く(in-memory リポジトリで差し替えられる)
 - [ ] 例外は層ごとに分類され、HTTP への変換が 1 か所にまとまっている
 - [ ] `domain/` が `usecases/` を import していない(依存は常に内向き)

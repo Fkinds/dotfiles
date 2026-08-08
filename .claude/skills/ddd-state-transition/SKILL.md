@@ -17,6 +17,8 @@ allowed-tools:
 [ddd-long-running-process](../ddd-long-running-process/SKILL.md)、
 状態が変わった事実を外へ伝えるのは
 [ddd-domain-events](../ddd-domain-events/SKILL.md)。
+**処理の受理と業務結果を別の軸として持つ**設計は
+[operation-result-design](../operation-result-design/SKILL.md)。
 
 ---
 
