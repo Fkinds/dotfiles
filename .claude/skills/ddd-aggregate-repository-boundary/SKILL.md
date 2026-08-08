@@ -23,7 +23,11 @@ allowed-tools:
 検索・一覧などの読み取りは
 [ddd-read-model-cqrs](../ddd-read-model-cqrs/SKILL.md)。
 そもそもどのコンテキストに属する集約かは
-[ddd-bounded-context](../ddd-bounded-context/SKILL.md)。
+[ddd-bounded-context](../ddd-bounded-context/SKILL.md)、
+境界を引く材料(不変条件)を業務から引き出す工程は
+[ddd-modeling-discovery](../ddd-modeling-discovery/SKILL.md)。
+Django 固有の落とし穴は
+[ddd-django-pitfalls](../ddd-django-pitfalls/SKILL.md)。
 
 ---
 

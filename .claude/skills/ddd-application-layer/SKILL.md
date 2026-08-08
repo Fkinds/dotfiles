@@ -25,7 +25,11 @@ allowed-tools:
 読み取り専用の処理は
 [ddd-read-model-cqrs](../ddd-read-model-cqrs/SKILL.md)、
 テストの書き方は
-[ddd-testing-strategy](../ddd-testing-strategy/SKILL.md)。
+[ddd-testing-strategy](../ddd-testing-strategy/SKILL.md)、
+トランザクションや signals など Django 固有の落とし穴は
+[ddd-django-pitfalls](../ddd-django-pitfalls/SKILL.md)、
+既存の `XxxService` を解体する手順は
+[ddd-legacy-refactoring](../ddd-legacy-refactoring/SKILL.md)。
 
 ---
 

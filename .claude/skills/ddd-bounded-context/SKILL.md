@@ -17,6 +17,10 @@ allowed-tools:
 [ddd-domain-object-completeness](../ddd-domain-object-completeness/SKILL.md) /
 [ddd-aggregate-repository-boundary](../ddd-aggregate-repository-boundary/SKILL.md) /
 [ddd-domain-events](../ddd-domain-events/SKILL.md)。
+言葉と境界を業務から発見する進め方は
+[ddd-modeling-discovery](../ddd-modeling-discovery/SKILL.md)、
+ここでの投資判断(コア/支援/汎用)を既存コードの移行範囲に使う場合は
+[ddd-legacy-refactoring](../ddd-legacy-refactoring/SKILL.md)。
 
 ---
 

@@ -21,6 +21,9 @@ usecase と同じ「ロジックの掃き溜め」になる。
 [ddd-aggregate-repository-boundary](../ddd-aggregate-repository-boundary/SKILL.md)、
 usecase の責務は
 [ddd-application-layer](../ddd-application-layer/SKILL.md)。
+**すでにある `XxxService` を解体する**手順は
+[ddd-legacy-refactoring](../ddd-legacy-refactoring/SKILL.md)
+(ここは新規に作る前の判断を扱う)。
 
 ---
 

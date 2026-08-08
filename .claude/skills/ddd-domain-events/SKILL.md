@@ -23,6 +23,10 @@ allowed-tools:
 [ddd-read-model-cqrs](../ddd-read-model-cqrs/SKILL.md)、
 コンテキストをまたぐ統合としてのイベントは
 [ddd-bounded-context](../ddd-bounded-context/SKILL.md)。
+**Django の signals はドメインイベントの代わりにならない** —
+[ddd-django-pitfalls](../ddd-django-pitfalls/SKILL.md)。
+どんなイベントがあるかを業務から洗い出す工程は
+[ddd-modeling-discovery](../ddd-modeling-discovery/SKILL.md)。
 
 ---
 

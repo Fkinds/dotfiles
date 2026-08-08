@@ -25,6 +25,12 @@ allowed-tools:
 [ddd-bounded-context](../ddd-bounded-context/SKILL.md)。
 ここで設計したものをどうテストするかは
 [ddd-testing-strategy](../ddd-testing-strategy/SKILL.md)。
+そもそも何をモデルにするかを見つける工程は
+[ddd-modeling-discovery](../ddd-modeling-discovery/SKILL.md)、
+金額・時間・識別子・数量の具体的な設計は
+[ddd-modeling-primitives](../ddd-modeling-primitives/SKILL.md)、
+既存コードから移行する場合は
+[ddd-legacy-refactoring](../ddd-legacy-refactoring/SKILL.md)。
 
 ---
 
