@@ -24,6 +24,8 @@ allowed-tools:
 [ddd-domain-service-specification](../ddd-domain-service-specification/SKILL.md)。
 そもそもどこにモデルの境界を引くかは
 [ddd-bounded-context](../ddd-bounded-context/SKILL.md)。
+ここで設計したものをどうテストするかは
+[ddd-testing-strategy](../ddd-testing-strategy/SKILL.md)。
 
 ---
 

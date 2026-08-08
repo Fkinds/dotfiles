@@ -23,7 +23,9 @@ allowed-tools:
 イベントのディスパッチは
 [ddd-domain-events](../ddd-domain-events/SKILL.md)、
 読み取り専用の処理は
-[ddd-read-model-cqrs](../ddd-read-model-cqrs/SKILL.md)。
+[ddd-read-model-cqrs](../ddd-read-model-cqrs/SKILL.md)、
+テストの書き方は
+[ddd-testing-strategy](../ddd-testing-strategy/SKILL.md)。
 
 ---
 
@@ -190,7 +192,8 @@ class CancelOrder:
 
 - 具象の選択は **composition root 1 か所**に閉じる(Django なら `apps.py` の
   `ready()`、DI コンテナ、あるいは view 側のファクトリ関数)。
-- テストでは in-memory 実装を差し込む。**usecase のテストに DB は要らない。**
+- テストでは in-memory 実装を差し込む。**usecase のテストに DB は要らない**
+  ([ddd-testing-strategy](../ddd-testing-strategy/SKILL.md))。
 - インフラを呼ぶ副作用(メール送信、外部 API)も抽象にする。usecase が
   `requests.post(...)` を直接書いたら、それはインフラ層の漏れ。
 
