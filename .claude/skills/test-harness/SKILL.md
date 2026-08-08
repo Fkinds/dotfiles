@@ -1,6 +1,6 @@
 ---
 name: test-harness
-description: テストを実行する仕組みの整備。依存する資源で切る small/medium/large のサイズ分類、ディレクトリと marker の自動付与による付け忘れ防止、サイズ違反を機械的に検出する仕組み(DB 接続・ソケットの遮断)、conftest.py の階層設計と fixture のスコープ、CI でサイズごとに分けて走らせる構成、実行時間の上限と遅いテストの扱いを扱う。テストが遅くなってきたとき、どのテストをいつ走らせるか決めるとき、pytest の marker や conftest を設計するとき、CI の実行時間を分けたいときに使う。
+description: テストを実行する仕組みの整備。依存する資源で切る small/medium/large のサイズ分類、ディレクトリと marker の自動付与による付け忘れ防止、サイズ違反を機械的に検出する仕組み(DB 接続・ソケットの遮断)、conftest.py の階層設計と fixture のスコープ、CI でサイズごとに分けて走らせる構成、実行時間の上限と遅いテストの扱いを扱う。テストをサイズで分類したいとき、どのテストをいつ走らせるか決めるとき、pytest の marker や conftest を設計するとき、CI の実行を段階に分けたいときに使う。
 allowed-tools:
   - Read
   - Grep
@@ -198,6 +198,8 @@ addopts = "--strict-markers -m small"
   走らせない(fail fast)。
 - **small は並列化する**(`pytest-xdist`)。依存がないので安全に分散できる。
   medium は DB を共有するので、並列度に注意(`--dist loadscope` など)。
+  **ワーカーごとの DB 分離、マイグレーション回避、キャッシュなどの高速化**は
+  [ci-test-performance](../ci-test-performance/SKILL.md)。
 - **large の失敗で PR をブロックしない。** 外部要因で落ちるため。
   ただし**失敗を放置しない**仕組み(通知、担当)は要る。
 
