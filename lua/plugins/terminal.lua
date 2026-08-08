@@ -1,3 +1,43 @@
+-- Claude Code エージェント一覧(.claude/bin/agent-dashboard.sh)をサイドバーで開閉する。
+-- 常駐プロセスなので使い回すが、Ctrl-C でジョブごと終わらせたら作り直す。
+-- 死んだターミナルを toggle しても再起動しないため。
+local dashboard = nil
+
+-- 幅は explorer(<leader>e / neo-tree)と揃える。狭い画面では画面幅の半分までに抑える。
+-- 注意: 上段は「状態 8 + リポジトリ 16 + ブランチ 24 + 経過 6 + ID 8 + 区切り」で約 66 桁あり、
+-- この幅では折り返して表が崩れる。下段(agent / skill)は端末幅に合わせて側が切り詰める。
+local DASHBOARD_WIDTH = 40
+
+local function dashboard_size()
+  return math.min(DASHBOARD_WIDTH, math.floor(vim.o.columns * 0.5))
+end
+
+local function toggle_dashboard()
+  -- jobwait の 0 タイムアウトは、実行中なら -1、無効な id なら -3 を返す。
+  if dashboard and vim.fn.jobwait({ dashboard.job_id or -1 }, 0)[1] ~= -1 then
+    dashboard = nil
+  end
+  dashboard = dashboard
+    or require("toggleterm.terminal").Terminal:new({
+      cmd = vim.fn.expand("~/.claude/bin/agent-dashboard.sh"),
+      direction = "vertical",
+      close_on_exit = true, -- Ctrl-C したらそのまま閉じる
+      hidden = true,
+      on_open = function(term)
+        -- toggleterm の vertical は botright vsplit 固定で splitright を見ないため、
+        -- 右カラムに出る。開いたあと自分で左端へ移し、崩れた幅を測り直す。
+        if vim.api.nvim_get_current_win() == term.window then
+          vim.cmd("wincmd H")
+        end
+        vim.api.nvim_win_set_width(term.window, dashboard_size())
+        -- 他ウィンドウの開閉で幅が変わらないよう固定し、表が折り返さないようにする。
+        vim.wo[term.window].winfixwidth = true
+        vim.wo[term.window].wrap = false
+      end,
+    })
+  dashboard:toggle(dashboard_size())
+end
+
 return {
   {
     "akinsho/toggleterm.nvim",
@@ -38,6 +78,7 @@ return {
       { "<leader>tt", "<cmd>ToggleTerm direction=horizontal<cr>", desc = "Terminal (horizontal)" },
       { "<leader>tf", "<cmd>ToggleTerm direction=float<cr>", desc = "Terminal (float)" },
       { "<leader>tv", "<cmd>ToggleTerm direction=vertical size=80<cr>", desc = "Terminal (vertical)" },
+      { "<leader>ad", toggle_dashboard, desc = "Claude エージェント一覧" },
       {
         "<leader>cu",
         function()
