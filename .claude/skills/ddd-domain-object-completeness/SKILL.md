@@ -1,7 +1,6 @@
 ---
 name: ddd-domain-object-completeness
 description: ドメインオブジェクト(エンティティ・値オブジェクト・集約)を常に完全かつ妥当な状態に保つための設計指針。Python 標準ライブラリの dataclasses を前提に、Always-Valid なドメインモデル、エンティティと値オブジェクトの使い分け、集約と集約ルート、ドメインモデル貧血症の禁止、完全性(全域性)を扱う。ドメイン層を設計・レビューするとき、あるいは不変条件・バリデーション・ドメインの振る舞いの置き場所に迷ったときに使う。
-user-invocable: true
 allowed-tools:
   - Read
   - Grep

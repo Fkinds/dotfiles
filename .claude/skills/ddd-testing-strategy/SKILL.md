@@ -5,7 +5,6 @@ allowed-tools:
   - Read
   - Grep
   - Glob
-  - Bash
 ---
 
 # DDD: テスト戦略 (Testing Strategy)
