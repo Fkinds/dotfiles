@@ -187,7 +187,7 @@ if order.customer.is_premium:   # ← ここで SELECT が走る
 from django.db import models          # NG
 from django.conf import settings      # NG
 from django.utils import timezone     # NG — datetime.now(UTC) を引数で受け取る
-from django.core.exceptions import ValidationError   # NG — ValueError を使う
+from django.core.exceptions import ValidationError   # NG — 独自の DomainError を使う
 from rest_framework import serializers               # NG
 ```
 

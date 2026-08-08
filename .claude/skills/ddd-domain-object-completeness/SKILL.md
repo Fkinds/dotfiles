@@ -45,7 +45,7 @@ allowed-tools:
 - 値オブジェクト / エンティティ: `@dataclass(frozen=True, kw_only=True)` + `__post_init__` でバリデーション。
 - `frozen=True` が代入(`__setattr__`)を封じるので、**不変性を自前で実装しなくてよい**。
 - バリデーションは `__init__` の実行中に走る `__post_init__` で行う。**「不正な状態を構築不能にする(make invalid states unconstructible)」** — construct してから `validate()` を呼ぶ、という順序は禁止。
-- `__post_init__` は `ValueError` / `TypeError` を送出する。インターフェース層でそれを変換し、不正なエンティティは 500 ではなく妥当なクライアントエラー(例: 422)として表面化させる。
+- `__post_init__` は例外を送出する。インターフェース層でそれを変換し、不正なエンティティは 500 ではなく妥当なクライアントエラー(例: 422)として表面化させる。**以降のコード例では簡潔さのため `ValueError` を使うが、実プロジェクトでは `DomainError` を基底とする独自例外にする** — 型階層とエラーコードは [exception-design](../exception-design/SKILL.md)。
 
 ```python
 from dataclasses import dataclass

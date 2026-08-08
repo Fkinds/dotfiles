@@ -286,7 +286,9 @@ class CancelOrder:
 それ以外                                  → 500(バグとして落とす)
 ```
 
-- **ドメイン層は HTTP を知らない。** `ValueError` / ドメイン固有の例外を投げるだけ。
+- **ドメイン層は HTTP を知らない。** ドメイン固有の例外を投げるだけ。
+  例外クラスの型階層・エラーコード・メッセージの向き先は
+  [exception-design](../exception-design/SKILL.md)。
 - **変換は view / exception handler で 1 か所にまとめる。** usecase ごとに try/except を
   書き散らさない。DRF なら custom exception handler。
 - **握り潰さない。** `except Exception: pass` は、不変条件の違反を無かったことにする。
