@@ -53,6 +53,10 @@ allowed-tools:
 出る場合(二重引き落とし、残高のマイナス、座席の二重販売)。それでも「予約 →
 確定」の 2 段にできれば結果整合で組める(→ TCC)。
 
+同じ問いは**単一サービス内で集約を切るときにも使う**。分散の有無に関わらず、
+不変条件ごとに遅延可否を決める
+([ddd-aggregate-repository-boundary](../ddd-aggregate-repository-boundary/SKILL.md))。
+
 ---
 
 ## 3. 戦略の選択
