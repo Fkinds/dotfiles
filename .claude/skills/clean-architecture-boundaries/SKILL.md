@@ -85,6 +85,8 @@ Controller ──> [入力ポート] ──> UseCase ──> [出力ポート] �
   通常は過剰。
 - **Gateway = リポジトリ**。設計は
   [ddd-aggregate-repository-boundary](../ddd-aggregate-repository-boundary/SKILL.md)。
+- **各アダプタの実装**(入口ごとの責務、外部 API クライアント、リトライの置き場所、
+  認証と認可の位置)は [adapter-design](../adapter-design/SKILL.md)。
 - **Controller に業務判断を置かない。** 変換だけ。
 
 ---

@@ -171,6 +171,8 @@ class CarrierAcl:
   気付けない。
 - **ACL はコストである。** 相手のモデルで本当に困らないなら順応者(Conformist)でよい。
   コアドメインが相手のモデルに汚染される場合にだけ払う価値がある。
+- ACL の実装(翻訳、リトライ、タイムアウト、テスト)は
+  [adapter-design](../adapter-design/SKILL.md)。
 
 ---
 

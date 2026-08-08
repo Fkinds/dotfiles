@@ -217,7 +217,8 @@ infrastructure/
 ```
 
 - **プロセスはドメイン層**(stdlib のみ)。cron も Celery も知らない。
-- 定期実行の設定はインフラ層。usecase を呼ぶだけ。
+- 定期実行の設定はインフラ層。usecase を呼ぶだけ。入口としての実装は
+  [adapter-design](../adapter-design/SKILL.md)。
 
 ---
 
