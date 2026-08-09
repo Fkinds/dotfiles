@@ -69,7 +69,16 @@ gh skill list      # 導入済み一覧
 gh skill update    # 更新
 ```
 
-導入済み: `gh-stack`(要 `gh extension install github/gh-stack`)。
+第 2 引数は**リポジトリ内のディレクトリ名**。frontmatter の `name` とは違うことが
+あり(`vercel-composition-patterns` に対しディレクトリは `composition-patterns`)、
+`name` を渡すと not found になる。
+
+導入済み:
+
+- `gh-stack`(要 `gh extension install github/gh-stack`)
+- `composition-patterns` / `react-best-practices` / `web-design-guidelines`
+  (`vercel-labs/agent-skills`)。React の合成パターン、パフォーマンス、
+  アクセシビリティ。FSD のレイヤー設計は自作の `fsd-*` が持つ。
 
 **自作スキルは、外部スキルが持たない運用ルールだけを持つ。** コマンドの使い方を
 書き写すと、本体の更新に追従できなくなる。
