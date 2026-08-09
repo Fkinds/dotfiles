@@ -6,8 +6,9 @@ Neovim (LazyVim) と Claude Code の個人設定リポジトリ。
 - Claude Code: `.claude/settings.json` / `.claude/skills/` / `.claude/agents/` /
   `.claude/hooks/` / `.claude/bin/`
 
-`~/.claude` 配下の `settings.json` / `statusline.sh` / `hooks` / `bin` は、この
-リポジトリへの symlink。新しいマシンでは張り直す。
+`~/.config/nvim` と、`~/.claude` 配下の `settings.json` / `statusline.sh` /
+`skills` / `agents` / `hooks` / `bin` は、このリポジトリへの symlink。新しい
+マシンでは張り直す(手順は [README.md](README.md#セットアップ))。
 
 ```bash
 ln -sfn ~/Work/dotfiles/.claude/bin ~/.claude/bin
