@@ -37,6 +37,40 @@ local function toggle_dashboard()
   dashboard:toggle(dashboard_size())
 end
 
+-- pyproject.toml のあるルートで CLI を走らせる。結果を読めるよう終了後も開いたままにし、
+-- format や実行でファイルが書き換わるので checktime でバッファを読み直す。
+local function run_in_root(cmd)
+  local root = vim.fs.root(0, { "pyproject.toml", ".git" }) or vim.fn.getcwd()
+  local Terminal = require("toggleterm.terminal").Terminal
+  Terminal:new({
+    cmd = cmd,
+    dir = root,
+    direction = "horizontal",
+    close_on_exit = false,
+    on_exit = function()
+      vim.schedule(function()
+        vim.cmd("checktime")
+      end)
+    end,
+  }):toggle()
+end
+
+-- 現在のバッファのファイルパスを shell 用にエスケープして返す。
+-- 未保存の変更ごと実行・lint したいので先に書き出す。対象外なら nil。
+local function save_current_python_file()
+  if vim.bo.filetype ~= "python" then
+    vim.notify("Python ファイルではありません", vim.log.levels.WARN)
+    return nil
+  end
+  local path = vim.api.nvim_buf_get_name(0)
+  if path == "" then
+    vim.notify("ファイル名のないバッファです（先に :w）", vim.log.levels.WARN)
+    return nil
+  end
+  vim.cmd("write")
+  return vim.fn.shellescape(path)
+end
+
 return {
   {
     "akinsho/toggleterm.nvim",
@@ -81,24 +115,32 @@ return {
       {
         "<leader>cu",
         function()
-          -- uv: ruff format -> ruff check -> ty check を一括実行。
-          -- pyproject.toml のあるルートで走らせ、format による変更を反映するため
-          -- 終了後に checktime でバッファを再読込する。
-          local root = vim.fs.root(0, { "pyproject.toml", ".git" }) or vim.fn.getcwd()
-          local Terminal = require("toggleterm.terminal").Terminal
-          Terminal:new({
-            cmd = "uv run ruff format && uv run ruff check && uv run ty check",
-            dir = root,
-            direction = "horizontal",
-            close_on_exit = false, -- 結果を読めるよう開いたままにする
-            on_exit = function()
-              vim.schedule(function()
-                vim.cmd("checktime")
-              end)
-            end,
-          }):toggle()
+          -- uv: ruff format -> ruff check -> ty check をプロジェクト全体へ一括実行。
+          run_in_root("uv run ruff format && uv run ruff check && uv run ty check")
         end,
-        desc = "uv: format + check + ty",
+        desc = "uv: format + check + ty (プロジェクト)",
+      },
+      {
+        "<leader>cU",
+        function()
+          -- 同じ流れを現在のファイルだけに掛ける。全体だと遅い / 他ファイルの指摘が混ざるとき用。
+          local file = save_current_python_file()
+          if file then
+            run_in_root(("uv run ruff format %s && uv run ruff check %s"):format(file, file))
+          end
+        end,
+        desc = "uv: ruff format + check (現在のファイル)",
+      },
+      {
+        "<leader>cx",
+        function()
+          -- 現在のファイルをそのまま実行する。ルートで走らせるので import は解決される。
+          local file = save_current_python_file()
+          if file then
+            run_in_root("uv run python " .. file)
+          end
+        end,
+        desc = "uv run python (現在のファイル)",
       },
     },
   },
