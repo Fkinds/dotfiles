@@ -1,6 +1,6 @@
 ---
 name: fsd-shared-layer
-description: Feature-Sliced Design (FSD) の shared レイヤーの設計指針。ドメイン知識を持たないという唯一の判断基準、スライスを持たないセグメント直下構成、UI キット(shared/ui)と外部 UI ライブラリのラップ範囲、HTTP クライアントとエラー正規化(shared/api)、shared/lib の分類と shared/config での環境変数の扱い、セグメント単位の公開、shared がゴミ箱化するのを防ぐ方法を扱う。shared にコードを置こうとしているとき、共通化した部品の置き場所に迷うとき、shared が肥大化してきたとき、UI キットや API クライアントを設計するときに使う。
+description: Feature-Sliced Design (FSD) の shared レイヤーの設計指針。ドメイン知識を持たないという唯一の判断基準、スライスを持たないセグメント直下構成、UI キット(shared/ui)と外部 UI ライブラリのラップ範囲、MUI などライブラリのバレル import を避けてサブパスから読む方法、HTTP クライアントとエラー正規化(shared/api)、shared/lib の分類と shared/config での環境変数の扱い、セグメント単位の公開、shared がゴミ箱化するのを防ぐ方法を扱う。shared にコードを置こうとしているとき、共通化した部品の置き場所に迷うとき、shared が肥大化してきたとき、UI キットや API クライアントを設計するとき、import が重くビルドが遅いときに使う。
 allowed-tools:
   - Read
   - Grep
@@ -102,6 +102,27 @@ MUI などの UI ライブラリを使っている場合、**全部をラップ�
 ラップしないものは各レイヤーからライブラリを直接 import してよい。
 **中身のないラッパーは、追跡すべきファイルを増やすだけ。**
 
+### 外部ライブラリはサブパスから import する
+
+FSD の Public API はバレル(`index.ts`)を前提にするが、**外部ライブラリのバレルは
+別問題**。`@mui/material` の入口経由は 2,000 を超えるモジュールを読み込み、
+開発時のビルドと初回読み込みを数秒単位で遅くする。
+
+```typescript
+// NG — ライブラリのバレル経由
+import { Button, TextField } from "@mui/material";
+
+// OK — サブパスから直接
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+```
+
+- Next.js の `optimizePackageImports` に相当する機構は **Vite には無い**。
+  ビルド設定で消せないので、import の書き方で避ける。
+- **自作スライスのバレルは維持する。** 数個から数十の re-export であり、
+  ライブラリの数千 re-export とは桁が違う。Public API の利点が上回る。
+- ラップした `shared/ui` の内部でも、ライブラリはサブパスから import する。
+
 `shared/ui` のコンポーネントは:
 
 - サーバーと通信しない(`shared/api` を import しない)。
@@ -193,6 +214,7 @@ export const env = { apiUrl: rawApiUrl } as const;
 - [ ] `shared/index.ts` を作らず、**セグメント単位**で公開しているか
 - [ ] `shared/ui` が通信もグローバル状態の参照もしていないか
 - [ ] UI ライブラリのラッパーに、既定値・組み合わせ・差し替えの**実際の理由**があるか
+- [ ] 外部ライブラリを**サブパスから** import しているか(バレル経由になっていないか)
 - [ ] エンドポイントを知る関数が `shared/api` に入っていないか
 - [ ] エラーの正規化が `shared/api` の 1 か所に閉じているか
 - [ ] `lib/` が用途別に分かれ、`utils` / `helpers` になっていないか

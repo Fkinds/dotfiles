@@ -1,6 +1,6 @@
 ---
 name: fsd-layers
-description: Feature-Sliced Design (FSD) のレイヤー構成そのものを扱う。app / pages / widgets / features / entities / shared の役割と選び方、下位レイヤーへの一方向依存、同一レイヤー間の cross-import 禁止と @x による例外、スライスと ui/model/api/lib/config セグメントの構成、index.ts による Public API、レイヤーの段階的な導入、機械的な依存検査を扱う。新しいコードをどのレイヤーに置くか迷ったとき、レイヤーをまたぐ import を書くとき、循環 import や逆流を直すとき、FSD を導入・レビューするときに使う。
+description: Feature-Sliced Design (FSD) のレイヤー構成そのものを扱う。app / pages / widgets / features / entities / shared の役割と選び方、下位レイヤーへの一方向依存、同一レイヤー間の cross-import 禁止と @x による例外、スライスと ui/model/api/lib/config セグメントの構成、index.ts による Public API、規模に応じた採用可否の判断と段階的な導入、機械的な依存検査を扱う。新しいコードをどのレイヤーに置くか迷ったとき、レイヤーをまたぐ import を書くとき、循環 import や逆流を直すとき、そもそも FSD を採用すべきか決めるとき、FSD を導入・レビューするときに使う。
 allowed-tools:
   - Read
   - Grep
@@ -170,7 +170,21 @@ import { CreateProjectForm } from "@/features/create-project/ui/CreateProjectFor
 
 ---
 
-## 7. 段階的に入れる
+## 7. 採用するか、どこから入れるか
+
+FSD は構造を保つコストを伴う。**入れない判断を先にする。**
+
+| 向く | 向かない |
+| --- | --- |
+| 画面数・機能数が多い中〜大規模 | 画面が数枚の社内ツール |
+| 複数人・複数チームで触る | 個人開発 |
+| ライフサイクルが長く、改修が続く | 短期で作り切るプロトタイプ |
+| DDD / クリーンアーキテクチャを採っている | 仕様が固まらず作り直しが前提 |
+
+向かない側で入れると、スライス間の移動と Public API の維持だけが残る。
+迷う規模なら `app` / `pages` / `shared` の 3 枚から始め、**必要になってから**増やす。
+
+### 段階的に入れる
 
 **6 レイヤー全部を最初から作らない。** 空のレイヤーディレクトリは置かない。
 
@@ -208,6 +222,7 @@ import { CreateProjectForm } from "@/features/create-project/ui/CreateProjectFor
 
 ## ルール(チェックリスト)
 
+- [ ] そもそも FSD を入れる規模か(向かない側で構造だけ抱えていないか)
 - [ ] そのコードは**決定フローで最初に当たったレイヤー**に置かれているか(迷ったら下位)
 - [ ] import は**下向き**だけか。逆流していないか
 - [ ] **同一レイヤーのスライス間** import がないか
