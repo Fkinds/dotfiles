@@ -123,8 +123,11 @@ Unexpected key(s) in SKILL.md frontmatter: argument-hint. Allowed properties are
 ```
 
 配布先が決まっていないなら、この 6 フィールドに収めておけばどちらでも通る。
-`` !`cmd` `` の動的コンテキスト注入など Claude Code 固有の本文機能も、claude.ai や
-API 経由では機能しない。
+`!` の直後にバッククォートでコマンドを囲む動的コンテキスト注入など、Claude Code 固有の
+本文機能も claude.ai や API 経由では機能しない。
+
+**この記法を本文で説明するときは、`!` とバッククォートを隣接させない。** インライン
+コードで囲んでも実行され、そのスキルが読み込めなくなる(`command not found`)。
 
 ## ステップ3 — 本文を書く
 
@@ -144,26 +147,32 @@ API 経由では機能しない。
 
 ### 本文で使える置換
 
+**以下では `$` と続きを `+` で分けて書いている。実際は間を空けずに続ける。**
+分けないと、この表自体が読み込み時に展開されて絶対パスやセッション ID に化ける
+(コードブロックの中でも展開される)。
+
 | 記法 | 展開されるもの |
 | --- | --- |
-| `` !`command` `` | 実行結果。Claude が本文を読む**前**に差し込まれる(動的コンテキスト注入) |
-| `$ARGUMENTS` / `$0` / `$1` | 起動時に渡された引数(全体 / 位置指定) |
-| `${CLAUDE_SKILL_DIR}` | その `SKILL.md` があるディレクトリ。同梱スクリプトの参照に使う |
-| `${CLAUDE_PROJECT_DIR}` | プロジェクトルート |
-| `${CLAUDE_SESSION_ID}` / `${CLAUDE_EFFORT}` | セッション ID / 現在の推論強度 |
+| `!` の直後にバッククォートで囲んだコマンド | 実行結果。Claude が本文を読む**前**に差し込まれる(動的コンテキスト注入) |
+| `$`+`ARGUMENTS` / `$0` / `$1` | 起動時に渡された引数(全体 / 位置指定) |
+| `$`+`{CLAUDE_SKILL_DIR}` | その `SKILL.md` があるディレクトリ。同梱スクリプトの参照に使う |
+| `$`+`{CLAUDE_PROJECT_DIR}` | プロジェクトルート |
+| `$`+`{CLAUDE_SESSION_ID}` / `$`+`{CLAUDE_EFFORT}` | セッション ID / 現在の推論強度 |
 
-`${CLAUDE_SKILL_DIR}` は本文と `allowed-tools` の Bash ルールの両方で展開されるので、
-両方に同じ書き方をすれば同梱スクリプトを許可プロンプトなしで実行できる。
+スキルのディレクトリを指す変数は本文と `allowed-tools` の Bash ルールの両方で展開される
+ので、両方に同じ書き方をすれば同梱スクリプトを許可プロンプトなしで実行できる。
 
 ```yaml
 ---
 name: render-chart
 description: CSV からチャートを描画する
-allowed-tools: Bash(${CLAUDE_SKILL_DIR}/scripts/render.sh *)
+allowed-tools: Bash(<SKILL_DIR>/scripts/render.sh *)
 ---
 
-`${CLAUDE_SKILL_DIR}/scripts/render.sh <csv-file>` を実行する。
+<SKILL_DIR>/scripts/render.sh <csv-file> を実行する。
 ```
+
+上の `<SKILL_DIR>` の位置に `$`+`{CLAUDE_SKILL_DIR}` を続けて書く。
 
 ## ステップ4 — 補助ファイルへ逃がす
 
