@@ -171,7 +171,8 @@ class CreditBureauAdapter(CreditChecker):
 - **リトライするのは「一時的失敗」だけ。** 4xx(相手が拒否)は再試行しても同じ
   ([operation-result-design](../operation-result-design/SKILL.md))。
 - **副作用のある呼び出しをリトライするなら冪等キーが要る。** ないままリトライすると
-  二重実行になる。
+  二重実行になる。相手が 429 を返したら `Retry-After` に従う。自分が API を
+  提供する側での実装は [api-reliability](../api-reliability/SKILL.md)。
 - **リトライの上限を超えたら、意味のある例外を投げる。** 黙って `None` を返さない。
 
 ---

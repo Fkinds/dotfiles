@@ -14,7 +14,9 @@ allowed-tools:
 否定的結果は例外にしない)。ここは**例外を使うと決めた後**、どう作るか。
 
 HTTP への変換方針は
-[ddd-application-layer](../ddd-application-layer/SKILL.md) 第 6 節。
+[ddd-application-layer](../ddd-application-layer/SKILL.md) 第 6 節、
+変換後のレスポンス本体の形式は
+[http-error-response](../http-error-response/SKILL.md)。
 
 > **本スキル群の他のコード例について**: 他の DDD スキルは簡潔さのため
 > `raise ValueError(...)` と書いている。**実プロジェクトでは、以下の階層に置き換える。**

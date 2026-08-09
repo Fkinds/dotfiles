@@ -163,6 +163,8 @@ class Order(Entity):
 **3 つ目が最も危険。** 「タイムアウトしたが、実は処理は成功していた」が起こる。
 外部呼び出しには冪等キーを渡す
 ([ddd-long-running-process](../ddd-long-running-process/SKILL.md))。
+自分が**受け取る側**として冪等キーをどう実装するかは
+[api-reliability](../api-reliability/SKILL.md)。
 
 ---
 
@@ -188,6 +190,8 @@ class Order(Entity):
   区別する。**
 - 変換は 1 か所(exception handler)に集約する
   ([ddd-application-layer](../ddd-application-layer/SKILL.md))。
+- **エラー時のボディの形式**(RFC 9457 Problem Details)とステータスの選び分けは
+  [http-error-response](../http-error-response/SKILL.md)。
 
 ---
 
