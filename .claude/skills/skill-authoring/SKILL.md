@@ -15,7 +15,8 @@ allowed-tools:
 新しいスキルを 1 つ作り、動くことを確認して提出するまでの手順。
 
 粒度の判断(1 スキルにするか複数に割るか)は [skill-scoping](../skill-scoping/SKILL.md)、
-既存スキルの点検は [skill-review](../skill-review/SKILL.md) を使う。
+既存スキルの点検は [skill-review](../skill-review/SKILL.md) を使う。作るものが
+サブエージェント定義なら [agent-authoring](../agent-authoring/SKILL.md)。
 
 ## そもそもスキルにすべきか
 
@@ -30,6 +31,9 @@ allowed-tools:
 
 - プロジェクト全体の普遍的な事実(技術スタック、ビルド/テストコマンド)→ CLAUDE.md。
 - その会話限りの指示 → そのまま書けばよい。
+- 目的が**文脈の隔離**(大量の出力を本文脈に残さない)や**ツールの制限**
+  → サブエージェント([agent-authoring](../agent-authoring/SKILL.md))。スキルは主会話の
+  文脈で動き、サブエージェントは会話履歴を持たない。
 
 ## ステップ1 — 置き場所と名前を決める
 

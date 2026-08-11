@@ -11,7 +11,8 @@ allowed-tools:
 # skill-review
 
 既存スキルを点検する。新規作成は [skill-authoring](../skill-authoring/SKILL.md)、
-粒度の判断は [skill-scoping](../skill-scoping/SKILL.md)。
+粒度の判断は [skill-scoping](../skill-scoping/SKILL.md)。サブエージェント定義の点検は
+[agent-review](../agent-review/SKILL.md)。
 
 ## 手順
 

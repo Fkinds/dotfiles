@@ -13,6 +13,10 @@ allowed-tools:
 [skill-authoring](../skill-authoring/SKILL.md)、既存スキルの点検は
 [skill-review](../skill-review/SKILL.md)。
 
+**そもそもスキルではなくサブエージェントにすべきか**の判断は
+[agent-authoring](../agent-authoring/SKILL.md) の冒頭。会話の文脈が要る作業はスキル、
+文脈を隔離したい・ツールを縛りたい作業はサブエージェント。
+
 ## 原則: 1 スキル = 1 ワークフロー
 
 **1 つのスキルは、1 つの description で言い切れる目的を 1 つだけ持つ。**
