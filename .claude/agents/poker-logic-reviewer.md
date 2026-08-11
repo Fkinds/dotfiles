@@ -1,6 +1,6 @@
 ---
 name: poker-logic-reviewer
-description: ポーカーの役判定ロジックの正しさを専門にレビューする。役判定の実装ファイル(evaluator.py / poker_validation.py / evaluate_hands.py / logic.py 等)が対象。研修課題「ポーカー役判定Webアプリ」のレビュー時、役判定ロジックの正確性を検証したいときに使う。判定漏れ・誤り・境界バグ(ホイール、重複カード、判定順序)を具体的に指摘する。
+description: 研修課題「ポーカー役判定Webアプリ」の役判定ロジックの正しさをレビューする。この研修課題の役判定実装(evaluator.py / poker_validation.py / evaluate_hands.py / logic.py 等、リポジトリにより名前が異なる)だけが対象。10 種の役の判定漏れ・誤り・判定順序と、境界バグ(ホイール、ラップアラウンド、ペアを含む max-min==4、重複カード)を具体的に指摘する。コードは変更しない。受講者の提出物をレビューするときに使う。
 tools: Read, Grep, Glob, Bash
 model: inherit
 ---
