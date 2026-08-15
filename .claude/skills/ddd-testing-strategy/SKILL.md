@@ -1,6 +1,6 @@
 ---
 name: ddd-testing-strategy
-description: DDD の層ごとのテスト方針。ドメイン層をモックも DB もなしでテストする、不変条件と集約の振る舞いの検証、in-memory リポジトリ(フェイク)によるユースケースのテスト、リポジトリ実装の往復テスト、ドメインイベントの検証、テストデータビルダー、モックを使ってよい範囲を扱う。ドメイン層・usecase のテストを書く/レビューするとき、テストに DB やモックが必要になってきたとき、実装を変えるたびにテストが壊れるとき、何をどの層でテストするか決めるときに使う。
+description: DDD の層ごとのテスト方針。ドメイン層・usecase のテストを書く/レビューするとき、テストに DB やモックが必要になってきたとき、実装を変えるたびにテストが壊れるとき、何をどの層でテストするか決めるときに使う。扱う範囲はドメイン層をモックも DB もなしでテストする、不変条件と集約の振る舞いの検証、in-memory リポジトリ(フェイク)によるユースケースのテスト、リポジトリ実装の往復テスト、ドメインイベントの検証、テストデータビルダー、モックを使ってよい範囲。
 allowed-tools:
   - Read
   - Grep
@@ -119,22 +119,6 @@ class TestEmail:
 集約の構築に 8 個の引数が要ると、テストの大半がセットアップで埋まり、
 **何を検証しているのかが読めなくなる**。既定値を持つビルダーを用意する。
 
-```python
-# tests/builders.py
-def an_order(
-    *,
-    status: OrderStatus = OrderStatus.PENDING,
-    lines: tuple[OrderLine, ...] | None = None,
-    customer_id: CustomerId | None = None,
-) -> Order:
-    """テストに関係ある値だけを渡す。残りは妥当な既定値。"""
-    return Order(
-        status=status,
-        lines=lines if lines is not None else (an_order_line(),),
-        customer_id=customer_id or CustomerId(value=uuid.uuid4()),
-    )
-```
-
 - **テストが気にする値だけを渡す。** `an_order(status=SHIPPED)` と書けば、
   「このテストは status だけを気にしている」が一目で分かる。
 - **既定値は必ず妥当なものにする。** ビルダー経由で不正な集約が作れてはいけない。
@@ -142,40 +126,16 @@ def an_order(
 - Django の `factory_boy` は**永続化モデル用**。ドメインオブジェクトには
   素の関数で十分(依存も増えない)。
 
+書き方は [fakes-and-builders.md](fakes-and-builders.md)。
+
 ---
 
 ## 4. ユースケース — in-memory フェイクで DB を外す
 
 usecase は抽象に依存している
 ([ddd-application-layer](../ddd-application-layer/SKILL.md))。テストでは
-**フェイク実装**を差し込む。
-
-```python
-class InMemoryOrderRepository(OrderRepository):
-    def __init__(self, initial: list[Order] | None = None) -> None:
-        self._store = {o.id: o for o in (initial or [])}
-
-    def find_by_id(self, order_id: OrderId) -> Order | None:
-        return self._store.get(order_id)
-
-    def save(self, order: Order) -> None:
-        self._store[order.id] = order
-
-
-class TestCancelOrder:
-    def test_取り消すと状態が保存されイベントが発行される(self) -> None:
-        order = an_order(status=OrderStatus.PENDING)
-        orders = InMemoryOrderRepository([order])
-        bus = RecordingEventBus()
-
-        result = CancelOrder(orders, bus).execute(
-            CancelOrderCommand(order_id=str(order.id), reason="顧客都合")
-        )
-
-        assert result.status == "cancelled"
-        assert orders.find_by_id(order.id).status is OrderStatus.CANCELLED
-        assert [type(e) for e in bus.published] == [OrderCancelled]
-```
+**フェイク実装**を差し込む。フェイクと usecase テストの書き方は
+[fakes-and-builders.md](fakes-and-builders.md)。
 
 ### フェイク > モック
 
