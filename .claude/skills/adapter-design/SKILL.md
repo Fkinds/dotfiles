@@ -153,7 +153,9 @@ class CreditBureauAdapter(CreditChecker):
 
 - **接続の詳細**(URL、認証ヘッダ、シリアライズ形式)
 - **外部形式 → 自分の型への翻訳**(`_to_rating`)
-- **外部の例外 → 意味のある例外への翻訳**(`raise ... from e`)
+- **外部の例外 → 意味のある例外への翻訳**(`raise ... from e`)。どの型に翻訳し、
+  その型をどこに置くかは [exception-design](../exception-design/SKILL.md) 第 3 節
+  (**専用エラー型はポートと同じ位置**に置く)
 - リトライ・タイムアウト(第 4 節)
 
 **アダプタが引き受けないこと:**
