@@ -304,14 +304,14 @@ class CancelOrder:
 
 **依存は常に内向き。** 外側は内側を知ってよいが、内側は外側を知らない。
 
-```text
-interfaces/          ← Django view / serializer / URL。HTTP を知る
-    ↓
-usecases/            ← ユースケース + DTO。ドメインを知る。Django は知らない(*)
-    ↓
-domain/              ← エンティティ・値オブジェクト・集約・リポジトリ抽象。stdlib のみ
-    ↑
-infrastructure/      ← リポジトリ実装 / Django モデル / EventBus 実装。抽象を実装する
+```mermaid
+flowchart TB
+    interfaces["interfaces/ — Django view / serializer / URL。HTTP を知る"]
+    usecases["usecases/ — ユースケース + DTO。ドメインを知る。Django は知らない(*)"]
+    domain["domain/ — エンティティ・値オブジェクト・集約・リポジトリ抽象。stdlib のみ"]
+    infrastructure["infrastructure/ — リポジトリ実装 / Django モデル / EventBus 実装"]
+    interfaces --> usecases --> domain
+    infrastructure -->|"抽象を実装する"| domain
 ```
 
 ```text

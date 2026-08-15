@@ -18,11 +18,25 @@ allowed-tools:
 他コンテキストの ACL は
 [ddd-bounded-context](../ddd-bounded-context/SKILL.md)。
 
-```text
-[インバウンド]                        [内側]              [アウトバウンド]
-HTTP view / 管理コマンド  ──┐                        ┌── リポジトリ
-イベントハンドラ / cron   ──┼─→  usecase → domain  ─┼── 外部 API クライアント
-                            ┘                        └── 通知・ファイル
+```mermaid
+flowchart LR
+    subgraph inbound["インバウンド"]
+        http["HTTP view / 管理コマンド"]
+        evt["イベントハンドラ / cron"]
+    end
+    subgraph core["内側"]
+        usecase --> domain
+    end
+    subgraph outbound["アウトバウンド"]
+        repo["リポジトリ"]
+        api["外部 API クライアント"]
+        notify["通知・ファイル"]
+    end
+    http --> usecase
+    evt --> usecase
+    usecase --> repo
+    usecase --> api
+    usecase --> notify
 ```
 
 ---

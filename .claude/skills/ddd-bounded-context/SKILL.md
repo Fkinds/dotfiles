@@ -123,11 +123,12 @@ allowed-tools:
 
 書き方は図でも表でもよいが、**各関係に「上流/下流」と「パターン名」を書く**。
 
-```text
-[販売] --(OHS: OrderPlaced イベント)--> [配送]
-[配送] --(ACL)--> [外部配送業者 API]        # 業者のモデルを持ち込まない
-[販売] --(共有カーネル: CustomerId のみ)--> [サポート]
-[認証] = 汎用サブドメイン。既製品(順応者)
+```mermaid
+flowchart LR
+    sales["販売"] -->|"OHS: OrderPlaced イベント"| shipping["配送"]
+    shipping -->|"ACL: 業者のモデルを持ち込まない"| carrier["外部配送業者 API"]
+    sales -->|"共有カーネル: CustomerId のみ"| support["サポート"]
+    auth["認証 — 汎用サブドメイン。既製品(順応者)"]
 ```
 
 ---

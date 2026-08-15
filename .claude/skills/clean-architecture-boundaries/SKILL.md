@@ -67,9 +67,11 @@ Humble Object)を扱う。
 
 境界を越える通信は、**呼ぶ側が定義したインターフェース**を通す。
 
-```text
-Controller ──> [入力ポート] ──> UseCase ──> [出力ポート] ──> Presenter
-                                     └──> [Gateway] ──> DB
+```mermaid
+flowchart LR
+    controller["Controller"] --> inport{{"入力ポート"}} --> usecase["UseCase"]
+    usecase --> outport{{"出力ポート"}} --> presenter["Presenter"]
+    usecase --> gateway{{"Gateway"}} --> db[("DB")]
 ```
 
 | 部品 | 責務 | 実装場所 |
