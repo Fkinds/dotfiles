@@ -1,10 +1,6 @@
 ---
 name: ddd-domain-service-specification
 description: 集約に収まらないドメインロジックの置き場所を決める設計指針。ロジックがどのオブジェクトにも自然に属さないとき、複数の集約をまたぐ判定を書くとき、`XxxService` を作ろうとしているとき、生成手順が複雑になってきたときに使う。扱う範囲はドメインサービスを名乗ってよい条件と乱用の見分け方、状態を持たないステートレスな実装、アプリケーションサービス(usecase)との線引き、仕様パターン(Specification)による判定ルールの部品化と再利用、ファクトリによる複雑な生成の切り出し。
-allowed-tools:
-  - Read
-  - Grep
-  - Glob
 ---
 
 # DDD: ドメインサービス・仕様・ファクトリ (Domain Service / Specification / Factory)

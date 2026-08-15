@@ -1,10 +1,6 @@
 ---
 name: clean-architecture-boundaries
 description: アーキテクチャの境界を引くかどうかと、引くときの作り方。層を増やすか迷うとき、Presenter や出力ポートを導入すべきか判断するとき、抽象が多すぎて追えないとき、view のテストが書けないときに使う。扱う範囲は境界のコストと引かない判断、完全な境界から単なる分離までの強度の段階、入力ポートと出力ポート、Presenter を使う場合と使わない場合、Controller と Gateway の責務、テスト可能にする Humble Object、Django/DRF での現実的な落とし所。
-allowed-tools:
-  - Read
-  - Grep
-  - Glob
 ---
 
 # アーキテクチャの境界 (Boundaries)

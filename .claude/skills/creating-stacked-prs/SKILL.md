@@ -2,9 +2,6 @@
 name: creating-stacked-prs
 description: スタック PR をこの環境のルールで作るための上乗せ指針。gh stack submit で PR を作るとき、スタックの PR を ready for review にするとき、スタックの PR にタイトルや本文を入れるときに使う。gh-stack のコマンド自体は公式スキルに委ねる。扱う範囲は draft のまま作る方法(--open を渡さない)、自動生成された英語タイトルを日本語に直す手順、assignee の付与、下から順に ready にする理由。
 allowed-tools:
-  - Read
-  - Grep
-  - Glob
   - Bash
 ---
 

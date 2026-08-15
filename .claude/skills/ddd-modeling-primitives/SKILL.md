@@ -1,10 +1,6 @@
 ---
 name: ddd-modeling-primitives
 description: 実務で必ず踏む題材のモデリング指針。金額や日時をドメインに持たせるとき、丸め・端数・通貨の扱いを決めるとき、ID をいつ誰が採番するか決めるとき、期間の重なりや境界で悩むときに使う。扱う範囲は金額(Decimal・通貨・丸め・配分)、時間(タイムゾーン・時点と期間・有効期間・営業日)、識別子(採番の責任・UUID・外部キーとの対応・自然キー)、数量と単位を、値オブジェクトとしてどう設計するか。
-allowed-tools:
-  - Read
-  - Grep
-  - Glob
 ---
 
 # DDD: 実務のモデリング題材 (Money / Time / Identity / Quantity)

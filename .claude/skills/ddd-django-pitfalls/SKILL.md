@@ -1,10 +1,6 @@
 ---
 name: ddd-django-pitfalls
 description: Django で DDD をやるときに層を壊す固有の落とし穴。Django プロジェクトで DDD を実践するとき、モデルやシグナルにロジックが漏れているとき、トランザクションやバリデーションの挙動で悩むときに使う。扱う範囲は signals を使わない理由、save() のオーバーライド禁止、Manager/QuerySet にビジネスロジックを置かない、transaction.atomic のネストと on_commit の挙動、Django の validation とドメインの不変条件の二重化、遅延読み込みと集約の関係、migration とドメインのずれ、settings/ORM への依存の締め出し。
-allowed-tools:
-  - Read
-  - Grep
-  - Glob
 ---
 
 # DDD: Django 固有の落とし穴 (Django Pitfalls)

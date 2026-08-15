@@ -1,10 +1,6 @@
 ---
 name: ci-test-performance
 description: CI でのテスト実行を速くする具体策。CI が遅いとき、DB のセットアップに時間がかかるとき、並列化で DB が衝突するとき、どこが遅いのか分からないときに使う。扱う範囲はボトルネックの測り方、DB セットアップの再利用(--reuse-db・マイグレーション回避・テンプレート DB)、pytest-xdist の並列度とワーカーごとの DB 分離、Django のテスト専用設定(パスワードハッシャ・ログ・キャッシュ)、依存と Docker レイヤのキャッシュ、変更差分に基づく選択実行、GitHub Actions のジョブ分割と matrix。
-allowed-tools:
-  - Read
-  - Grep
-  - Glob
 ---
 
 # CI テストの高速化 (CI Test Performance)

@@ -1,10 +1,6 @@
 ---
 name: skill-scoping
 description: スキルの粒度を決める指針。スキルが肥大化してきたとき、1 つのスキルに複数の目的が混ざっているとき、逆に分けすぎて起動が不安定なとき、あるいは新しいスキルを何個に分けて設計するか迷ったときに使う。扱う範囲は 1 つの SKILL.md にどこまで入れるか、いつ複数スキルへ分割するか、詳細をどこまで補助ファイルへ逃がすか(段階的開示 / progressive disclosure)。
-allowed-tools:
-  - Read
-  - Grep
-  - Glob
 ---
 
 # skill-scoping

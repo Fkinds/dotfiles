@@ -1,10 +1,6 @@
 ---
 name: fsd-pages-layer
 description: Feature-Sliced Design (FSD) の pages レイヤーの設計指針。pages にコードを置こうとしているとき、画面が肥大化してきたとき、URL の状態やルートパラメータの扱いに迷うとき、ルーティングと FSD の対応を決めるときに使う。扱う範囲は URL と 1 対 1 で対応する画面の切り方、widgets / features を並べるだけに徹する責務、ルートパラメータと検索パラメータの検証、データ取得を先に始める起点(loader / prefetch)の置き場所、ルーティングライブラリのディレクトリと pages スライスの分離、共通レイアウトの扱い、ページが太ったときの切り出し先。
-allowed-tools:
-  - Read
-  - Grep
-  - Glob
 ---
 
 # FSD: pages レイヤー

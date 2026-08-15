@@ -1,10 +1,6 @@
 ---
 name: ddd-read-model-cqrs
 description: 読み取り側(クエリ)を書き込み側(集約)から分離する設計指針。一覧・検索・ダッシュボードを実装するとき、リポジトリに検索メソッドが増え始めたとき、表示都合で集約が肥大化しているとき、N+1 や JOIN の重さがドメイン層に染み出したときに使う。扱う範囲はリポジトリを検索メソッド置き場にしない判断、read model / query service の設計、DTO を返す読み取りパス、Django ORM を直接使ってよい範囲、CQRS をどこまでやるか、イベントによる投影と結果整合。
-allowed-tools:
-  - Read
-  - Grep
-  - Glob
 ---
 
 # DDD: 読み取りモデルと CQRS (Read Model / CQRS)
