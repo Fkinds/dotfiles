@@ -37,6 +37,8 @@ flowchart LR
     usecase --> repo
     usecase --> api
     usecase --> notify
+    %% 不可視リンク。アウトバウンドを横並びに固定して矢印の連鎖に見えるのを防ぐ
+    repo ~~~ api ~~~ notify
 ```
 
 ---
