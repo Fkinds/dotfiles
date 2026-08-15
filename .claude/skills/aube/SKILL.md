@@ -7,130 +7,45 @@ description: |
   Node dependencies in this project. Skip for repos using pnpm/npm/yarn directly with no aube intent.
 ---
 
-# aube — fast Node.js package manager
+# aube — 運用ルール
 
-Site: https://aube.en.dev/ · Repo: https://github.com/endevco/aube · License: MIT
+aube は Node.js のパッケージマネージャ。既存の `pnpm-lock.yaml` / `yarn.lock` /
+`package-lock.json` をその場で読み書きするので、ロックファイル形式を変えずに導入できる。
 
-aube is a Node.js package manager (current: v1.16.0) that emphasises speed, supply-chain security,
-and disk efficiency. It **reads and writes existing `pnpm-lock.yaml` / `yarn.lock` / `package-lock.json`
-in place**, so a project can adopt aube without changing its lockfile format.
+**コマンド一覧・インストール手順・設定項目の網羅は公式に委ねる**(末尾の References)。
+ここには、公式を読んでも分からない**この環境の決めごとと落とし穴**だけを置く。
 
-## Install
+## 落とし穴: `aubr` は自動インストールする
 
-| Method | Command |
-|---|---|
-| mise (recommended) | `mise use -g aube` |
-| Homebrew | `brew install endevco/tap/aube` |
-| npm (global) | `npm install -g --ignore-scripts=false @endevco/aube` |
-| Cargo | `cargo install aube --locked` |
-| GitHub Actions | `uses: endevco/aube-action@v1` |
+`aubr <script>`(= `aube run`)は、`package.json` かロックファイルが前回の install から
+変わっているときだけ自動で install してから走る。
 
-## Command mapping (pnpm → aube)
+```sh
+# NG: pnpm の手順をそのまま翻訳した
+aube install && aube run build
 
-| pnpm | aube |
-|---|---|
-| `pnpm install` | `aube install` |
-| `pnpm install --frozen-lockfile` | `aube ci` *(clean install, frozen lockfile — use in CI)* |
-| `pnpm add <pkg>` | `aube add <pkg>` |
-| `pnpm add -D <pkg>` | `aube add -D <pkg>` |
-| `pnpm remove <pkg>` | `aube remove <pkg>` |
-| `pnpm run <script>` | `aube run <script>` or `aubr <script>` |
-| `pnpm test` | `aube test` or `aubr test` |
-| `pnpm exec <bin>` | `aube exec <bin>` |
-| `pnpm dlx <pkg>` | `aubx <pkg>` |
-| `pnpm update [pkg]` | `aube update [pkg]` |
-| `pnpm why <pkg>` | `aube why <pkg>` |
-| `pnpm list` | `aube list` |
-
-### `aubr` / `aubx`
-
-- **`aubr <script>`** — shortcut for `aube run <script>`. Auto-installs first **only if** `package.json`
-  or the lockfile changed since the last install; otherwise runs immediately.
-- **`aubx <pkg>`** — shortcut for `aube dlx`, for one-off tool execution (e.g. `aubx cowsay hi`).
-
-> Aube's auto-install means you should *not* literally translate `pnpm install && pnpm run X` into
-> `aube install && aube run X` — just `aubr X` is enough.
-
-## Lockfiles
-
-- aube reads and writes `pnpm-lock.yaml` v9 in place. Older lockfiles: bump first with
-  `npx pnpm@latest install`.
-- Aube's native lockfile is `aube-lock.yaml`. Switch with `aube import` or by deleting the existing
-  lockfile.
-- If both aube and pnpm are used in parallel, both can write to `pnpm-lock.yaml` without conflict.
-
-## CI usage
-
-Recommended GitHub Actions step:
-
-```yaml
-- uses: endevco/aube-action@v1
-  with:
-    version: latest
-    node-version: auto
-    run-install: true     # runs `aube ci` after setup
+# OK: aubr が必要なときだけ install する
+aubr build
 ```
 
-Use `aube ci` (alias: `clean-install`) — wipes `node_modules` and installs from the locked
-versions. Equivalent to `npm ci` / `pnpm install --frozen-lockfile`.
+`pnpm install && pnpm run X` を機械的に `aube install && aube run X` に置き換えない。
 
-`--frozen-lockfile` is also available on `aube install`:
-- `--frozen-lockfile` — error if lockfile drifts from `package.json`
-- `--prefer-frozen-lockfile` — use lockfile if fresh, re-resolve when stale
-- `--no-frozen-lockfile` — force re-resolution
+## セキュリティ設定
 
-## Docker
+`paranoid=true` が主要なゲートを一括で有効にする。**それでも覆われない項目**があるので、
+この環境では以下も明示的に有効にする。
 
-There is no published `endevco/aube` Docker image. Install via npm or by downloading a release
-binary in your image:
-
-```Dockerfile
-FROM node:22-slim
-RUN npm install -g --ignore-scripts=false @endevco/aube
-# ... then `aube ci` / `aubr serve`
-```
-
-(`corepack enable pnpm` is no longer needed when aube replaces pnpm entirely.)
-
-## Storage
-
-aube keeps installed packages in `~/.local/share/aube/store/` (global, content-addressable) and
-materialises projects under `node_modules/.aube/`. Multiple projects share the same physical files.
-
-## Security defaults
-
-- Trust downgrades fail at resolve
-- New releases sit out a 24h cooling window
-- `aube add` blocks known-malicious packages, prompts on near-zero-download installs
-- Lifecycle scripts require approval (jailed builds)
-- `paranoid: true` in settings turns the soft gates into hard fails
-
-## Strict / maximum-security configuration
-
-`paranoid: true` is the single switch that bundles:
-
-| Forced setting | Effect |
-|---|---|
-| `trustPolicy=no-downgrade` | reject versions with weaker publisher attestation than prior releases |
-| `jailBuilds=true` | sandbox lifecycle scripts (Seatbelt / Landlock / seccomp) |
-| `minimumReleaseAgeStrict=true` | hard-fail when no version satisfies the 24h age gate |
-| `strictStoreIntegrity=true` | fail if packument lacks `dist.integrity` |
-| `strictDepBuilds=true` | fail when deps have unapproved build scripts |
-| `advisoryCheck=required` | fail-closed on OSV malware check |
-
-Settings not covered by `paranoid` that you may also want (this repo enables them):
-
-| Setting | Strictest | Why |
+| 設定 | 値 | なぜ paranoid だけでは足りないか |
 |---|---|---|
-| `advisoryCheckOnInstall` | `required` | OSV check on plain reinstalls (paranoid only covers fresh resolves) |
-| `advisoryCheckEveryInstall` | `true` | even frozen reinstalls hit the live OSV API |
-| `advisoryBloomCheck` | `required` | bloom-filter prefilter on every install path |
-| `lowDownloadThreshold` | `10000`+ | reject more long-tail/typosquat packages |
-| `strictPeerDependencies` | `true` | fail install on missing/invalid peers |
-| `dangerouslyAllowAllBuilds` | `false` | never auto-approve build scripts |
-| `strictSsl` | `true` | never skip TLS verification |
+| `advisoryCheckOnInstall` | `required` | paranoid は新規解決しか見ない。素の再インストールも OSV に当てる |
+| `advisoryCheckEveryInstall` | `true` | frozen な再インストールでも実際に OSV API を叩く |
+| `advisoryBloomCheck` | `required` | 全 install 経路に bloom filter の前段チェックを入れる |
+| `lowDownloadThreshold` | `10000`+ | ロングテール / typosquat をより広く弾く |
+| `strictPeerDependencies` | `true` | peer の欠落・不整合で install を失敗させる |
+| `dangerouslyAllowAllBuilds` | `false` | build script を自動承認させない |
+| `strictSsl` | `true` | TLS 検証を飛ばさせない |
 
-Example `.npmrc` (project root) for maximum strict:
+プロジェクト直下の `.npmrc`:
 
 ```
 paranoid=true
@@ -150,21 +65,20 @@ strictSsl=true
 dangerouslyAllowAllBuilds=false
 ```
 
-### Approving build scripts
+### build script の承認はコミットする
 
-`strictDepBuilds=true` makes install fail when deps want to run lifecycle scripts. After
-reviewing what the script does, approve packages explicitly:
+`strictDepBuilds=true` の下では、lifecycle script を持つ依存があると install が失敗する。
+中身を確認してから明示的に承認する。
 
 ```sh
-aube approve-builds              # interactive picker
-aube approve-builds esbuild      # approve specific package
+aube approve-builds              # 対話で選ぶ
+aube approve-builds esbuild      # 個別に承認
 ```
 
-Approvals are written to `aube-workspace.yaml` (or `pnpm-workspace.yaml` if present) under
-the `allowBuilds:` key — **commit this file** so CI and other devs share the allowlist.
+承認は `aube-workspace.yaml`(なければ `pnpm-workspace.yaml`)の `allowBuilds:` に書かれる。
+**このファイルをコミットする** — CI と他の開発者が同じ許可リストを使うため。
 
-Per-package privilege widening for jailed builds (`jailBuildPermissions` in
-`aube-workspace.yaml`):
+jail された build に個別の権限を足す場合も同じファイルに書く:
 
 ```yaml
 jailBuildPermissions:
@@ -175,44 +89,28 @@ jailBuildPermissions:
     network: true
 ```
 
-### Configuration precedence
+## CI での固定
 
-1. CLI flags (`--frozen-lockfile`, ...)
-2. Env vars (`AUBE_PARANOID=true`, `NPM_CONFIG_*`)
-3. `.npmrc` (project / user / global)
-4. `aube-workspace.yaml` / `pnpm-workspace.yaml`
-5. Root `package.json` (`pnpm.*` for peer rules)
+- **`endevco/aube-action` は `@v1` ではなくコミット SHA で固定する。** タグは動く。
+- **`version:` も `latest` ではなく厳密なリリース**(例 `1.16.0`)を指定する。
+- **Dockerfile で `@endevco/aube` をグローバル導入するときは非 root ユーザーで。**
+  postinstall がプラットフォーム別バイナリを取りに行くため、root だとそのまま root で走る。
 
-### Security scanner (optional, Bun-compatible API)
+## このリポジトリでの決めごと
 
-```yaml
-# aube-workspace.yaml
-securityScanner: "@acme/bun-security-scanner"
-```
-
-Requires Node 22.6+. Runs post-resolve, pre-download. A `fatal` advisory aborts install
-with exit code 48.
-
-### CI hardening for aube itself
-
-- **Pin `endevco/aube-action` to a commit SHA**, not `@v1`. Tags are mutable.
-- Pin `version:` to an exact aube release (e.g. `1.16.0`), not `latest`.
-- In Dockerfiles, install `@endevco/aube` globally **as a non-root user** (the postinstall
-  fetches a platform binary and would run as root otherwise).
-
-## Project conventions in this repo
-
-- Frontend lives in `client/vue-workspace/sample-vue/`.
-- Lockfile kept as `pnpm-lock.yaml` (aube reads/writes it in place — no migration to
-  `aube-lock.yaml` so the lockfile stays diff-friendly for reviewers familiar with pnpm).
-- CI installs deps via `endevco/aube-action@v1` (see `.github/actions/setup-frontend/action.yml`).
-- Docker image installs aube globally via npm, then `aube install`.
-- Scripts called as `aubr <script>` in `package.json` invocations.
+- フロントエンドは `client/vue-workspace/sample-vue/`。
+- ロックファイルは `pnpm-lock.yaml` のまま(aube がその場で読み書きする)。
+  `aube-lock.yaml` へは移行しない — pnpm に慣れたレビュアーが差分を読めるようにするため。
+- CI の依存インストールは `endevco/aube-action@v1`
+  (`.github/actions/setup-frontend/action.yml`)。
+- Docker イメージは npm で aube をグローバル導入してから `aube install`。
+- `package.json` から呼ぶスクリプトは `aubr <script>` の形。
 
 ## References
 
 - Guide: https://aube.en.dev/guide/
-- For pnpm users: https://aube.en.dev/pnpm-users
-- CLI reference: https://aube.en.dev/cli/
-- Lockfiles: https://aube.en.dev/package-manager/lockfiles
-- Security: https://aube.en.dev/security
+- pnpm からの対応表: https://aube.en.dev/pnpm-users
+- CLI リファレンス: https://aube.en.dev/cli/
+- ロックファイル: https://aube.en.dev/package-manager/lockfiles
+- セキュリティ: https://aube.en.dev/security
+- Repo: https://github.com/endevco/aube
