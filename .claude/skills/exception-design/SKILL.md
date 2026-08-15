@@ -90,7 +90,7 @@ class OrderNotFound(ApplicationError):
   ではなく、アプリケーションの都合
   ([ddd-application-layer](../ddd-application-layer/SKILL.md))。
 - **インフラの例外をドメインまで漏らさない。** リポジトリ実装で捕まえ、
-  意味のある例外に翻訳する(第 5 節)。
+  意味のある例外に翻訳する(第 6 節)。
 - 層ごとに基底が分かれていると、**exception handler で一括変換できる**。
 
 ### ポート専用のエラーは、ポートと同じ位置に置く

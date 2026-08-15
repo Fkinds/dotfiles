@@ -4,7 +4,6 @@ description: 新しい Claude スキル(SKILL.md)を作成する手順。「ス�
 allowed-tools:
   - Write
   - Edit
-  - Bash
 ---
 
 # skill-authoring

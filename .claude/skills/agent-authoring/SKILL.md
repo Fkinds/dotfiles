@@ -4,7 +4,7 @@ description: 新しいサブエージェント定義(.claude/agents/*.md)を作�
 allowed-tools:
   - Write
   - Edit
-  - Bash
+  - Bash(ls *)
 ---
 
 # agent-authoring
