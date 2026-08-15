@@ -12,38 +12,11 @@ ln -sfn ~/Work/dotfiles/.claude/bin ~/.claude/bin
 
 ## エージェント一覧 (`.claude/bin/agent-dashboard.sh`)
 
-起動中の Claude Code セッションを一覧するダッシュボード。Ghostty のタブを 1 枚使って
-常駐させる。承認待ちで止まっているセッションが上に来る。Neovim では `<leader>ad`。
+起動中の Claude Code セッションを一覧するダッシュボード。Neovim では `<leader>ad`。
+表示仕様・状態ファイル・キャッシュは `agent-dashboard` スキルにある。
 
-**要対応 / 稼働中 / 待機** の 3 セクションに分け、1 セッションを最大 3 行で出す。
-
-- 名前行: グリフ + リポジトリ名。状態によらず同じ明るさにする
-- メタ行: 状態 / ブランチ / 経過 / セッション ID。状態の色が乗る
-- 活動行: 使っているサブエージェントと `/スキル`(サブエージェント稼働中は色が変わる)。
-  何も使っていなければ行ごと出さない
-
-グリフは `◉` 要対応 / `●` 稼働中 / `○` 待機 で、色が出なくても状態が読める。
-
-固定幅の列を持たないので、Ghostty の全幅でも nvim の 40 桁サイドバーでも折り返さない。
-溢れたときは**セッション ID → ブランチ**の順に削る(状態と経過は残す)。24 桁まで縮む。
-
-```bash
-~/.claude/bin/agent-dashboard.sh          # 常駐(1秒ごとに再描画)
-~/.claude/bin/agent-dashboard.sh --once   # 1回だけ描画
-```
-
-上段の状態は `.claude/hooks/agent-state.sh` が hook から
-`~/.claude/agent-state/<session_id>.json` に書く。`settings.json` の `SessionStart` /
-`UserPromptSubmit` / `PermissionRequest` / `Notification` / `Stop` / `SessionEnd` に
-割り当て済み。
-
-下段はセッションの transcript(`~/.claude/projects/**/<session_id>.jsonl`)から `Agent` /
-`Task` / `Skill` の tool_use を拾う。transcript は数 MB になるので、読んだ結果を
-`~/.claude/cache/agent-dashboard.json` に持ち、次回は増えたバイトだけ読む。**このキャッシュ
-は消しても支障ない**(次の描画で全部読み直す)。
-
-**状態の置き場を `~/.claude/agents/` にしないこと。** そこはサブエージェント定義の
-ディレクトリで、別物。
+**状態の置き場を `~/.claude/agent-state/` から `~/.claude/agents/` に移さないこと。**
+後者はサブエージェント定義のディレクトリで、別物。
 
 ## スキル (`.claude/skills/`)
 
