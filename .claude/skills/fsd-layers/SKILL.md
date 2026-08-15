@@ -1,6 +1,6 @@
 ---
 name: fsd-layers
-description: Feature-Sliced Design (FSD) のレイヤー構成そのものを扱う。app / pages / widgets / features / entities / shared の役割と選び方、下位レイヤーへの一方向依存、同一レイヤー間の cross-import 禁止と @x による例外、スライスと ui/model/api/lib/config セグメントの構成、index.ts による Public API、規模に応じた採用可否の判断と段階的な導入、機械的な依存検査を扱う。新しいコードをどのレイヤーに置くか迷ったとき、レイヤーをまたぐ import を書くとき、循環 import や逆流を直すとき、そもそも FSD を採用すべきか決めるとき、FSD を導入・レビューするときに使う。
+description: Feature-Sliced Design (FSD) のレイヤー構成そのものを扱う。新しいコードをどのレイヤーに置くか迷ったとき、レイヤーをまたぐ import を書くとき、循環 import や逆流を直すとき、そもそも FSD を採用すべきか決めるとき、FSD を導入・レビューするときに使う。扱う範囲は app / pages / widgets / features / entities / shared の役割と選び方、下位レイヤーへの一方向依存、同一レイヤー間の cross-import 禁止と @x による例外、スライスと ui/model/api/lib/config セグメントの構成、index.ts による Public API、規模に応じた採用可否の判断と段階的な導入、機械的な依存検査。
 allowed-tools:
   - Read
   - Grep

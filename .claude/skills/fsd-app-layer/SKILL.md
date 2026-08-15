@@ -1,6 +1,6 @@
 ---
 name: fsd-app-layer
-description: Feature-Sliced Design (FSD) の app レイヤーの設計指針。プロバイダの積む順序と依存関係、ルーターの組み立て、テーマとグローバルスタイル、環境変数の検証を含むエントリーポイント、全体を覆う Error Boundary と Suspense の境界、監視や i18n など初期化の副作用の閉じ込め、app が全レイヤーを import できる唯一の場所であること、app にロジックを置かないことを扱う。app にコードを置こうとしているとき、Provider やルーターの設定を書くとき、グローバルなエラー処理や初期化処理の置き場所に迷うときに使う。
+description: Feature-Sliced Design (FSD) の app レイヤーの設計指針。app にコードを置こうとしているとき、Provider やルーターの設定を書くとき、グローバルなエラー処理や初期化処理の置き場所に迷うときに使う。扱う範囲はプロバイダの積む順序と依存関係、ルーターの組み立て、テーマとグローバルスタイル、環境変数の検証を含むエントリーポイント、全体を覆う Error Boundary と Suspense の境界、監視や i18n など初期化の副作用の閉じ込め、app が全レイヤーを import できる唯一の場所であること、app にロジックを置かないこと。
 allowed-tools:
   - Read
   - Grep

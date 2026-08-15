@@ -1,6 +1,6 @@
 ---
 name: fsd-shared-layer
-description: Feature-Sliced Design (FSD) の shared レイヤーの設計指針。ドメイン知識を持たないという唯一の判断基準、スライスを持たないセグメント直下構成、UI キット(shared/ui)と外部 UI ライブラリのラップ範囲、MUI などライブラリのバレル import を避けてサブパスから読む方法、HTTP クライアントとエラー正規化(shared/api)、shared/lib の分類と shared/config での環境変数の扱い、セグメント単位の公開、shared がゴミ箱化するのを防ぐ方法を扱う。shared にコードを置こうとしているとき、共通化した部品の置き場所に迷うとき、shared が肥大化してきたとき、UI キットや API クライアントを設計するとき、import が重くビルドが遅いときに使う。
+description: Feature-Sliced Design (FSD) の shared レイヤーの設計指針。shared にコードを置こうとしているとき、共通化した部品の置き場所に迷うとき、shared が肥大化してきたとき、UI キットや API クライアントを設計するとき、import が重くビルドが遅いときに使う。扱う範囲はドメイン知識を持たないという唯一の判断基準、スライスを持たないセグメント直下構成、UI キット(shared/ui)と外部 UI ライブラリのラップ範囲、MUI などライブラリのバレル import を避けてサブパスから読む方法、HTTP クライアントとエラー正規化(shared/api)、shared/lib の分類と shared/config での環境変数の扱い、セグメント単位の公開、shared がゴミ箱化するのを防ぐ方法。
 allowed-tools:
   - Read
   - Grep

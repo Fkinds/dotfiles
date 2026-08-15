@@ -1,6 +1,6 @@
 ---
 name: fsd-entities-layer
-description: Feature-Sliced Design (FSD) の entities レイヤーの設計指針。業務ドメインの名詞をスライスにする判断、model セグメントでの型・スキーマ・ドメインロジックの持ち方、api セグメントに置く読み取りとキー設計、表示に徹する entity の ui、entity 同士の参照を @x で解く方法、操作(feature)との線引き、entity を作らない判断を扱う。entities にコードを置こうとしているとき、ドメインの型やスキーマの置き場所に迷うとき、entity 同士が参照し合って cross-import になったとき、entity が肥大化してきたときに使う。
+description: Feature-Sliced Design (FSD) の entities レイヤーの設計指針。entities にコードを置こうとしているとき、ドメインの型やスキーマの置き場所に迷うとき、entity 同士が参照し合って cross-import になったとき、entity が肥大化してきたときに使う。扱う範囲は業務ドメインの名詞をスライスにする判断、model セグメントでの型・スキーマ・ドメインロジックの持ち方、api セグメントに置く読み取りとキー設計、表示に徹する entity の ui、entity 同士の参照を @x で解く方法、操作(feature)との線引き、entity を作らない判断。
 allowed-tools:
   - Read
   - Grep

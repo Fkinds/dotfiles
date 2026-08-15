@@ -1,6 +1,6 @@
 ---
 name: fsd-widgets-layer
-description: Feature-Sliced Design (FSD) の widgets レイヤーの設計指針。複数の feature / entity を束ねた自己完結ブロックを作る条件と、作らずに pages で合成する判断、widget がデータ取得や状態を自分で持ってよい範囲、pages/ui との線引き、ヘッダーやサイドバーなどレイアウトの置き場所、widget 同士の参照を避ける方法を扱う。widgets にコードを置こうとしているとき、widget を作るべきか迷うとき、ページから大きな UI ブロックを切り出すとき、共通レイアウトの置き場所を決めるときに使う。
+description: Feature-Sliced Design (FSD) の widgets レイヤーの設計指針。widgets にコードを置こうとしているとき、widget を作るべきか迷うとき、ページから大きな UI ブロックを切り出すとき、共通レイアウトの置き場所を決めるときに使う。扱う範囲は複数の feature / entity を束ねた自己完結ブロックを作る条件と、作らずに pages で合成する判断、widget がデータ取得や状態を自分で持ってよい範囲、pages/ui との線引き、ヘッダーやサイドバーなどレイアウトの置き場所、widget 同士の参照を避ける方法。
 allowed-tools:
   - Read
   - Grep

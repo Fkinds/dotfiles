@@ -1,6 +1,6 @@
 ---
 name: fsd-features-layer
-description: Feature-Sliced Design (FSD) の features レイヤーの設計指針。ユーザー操作を「動詞」でスライスに切る判断と粒度、ui にアクションの起点だけを置く構成、api での更新系とキャッシュ無効化、model でのフォーム状態と送信状態の一元管理、feature 同士の cross-import を上位での合成や下位への移動で解く方法、feature を作らない判断を扱う。features にコードを置こうとしているとき、フォームや送信処理の置き場所に迷うとき、feature 同士が参照し合ったとき、feature が肥大化してきたときに使う。
+description: Feature-Sliced Design (FSD) の features レイヤーの設計指針。features にコードを置こうとしているとき、フォームや送信処理の置き場所に迷うとき、feature 同士が参照し合ったとき、feature が肥大化してきたときに使う。扱う範囲はユーザー操作を「動詞」でスライスに切る判断と粒度、ui にアクションの起点だけを置く構成、api での更新系とキャッシュ無効化、model でのフォーム状態と送信状態の一元管理、feature 同士の cross-import を上位での合成や下位への移動で解く方法、feature を作らない判断。
 allowed-tools:
   - Read
   - Grep

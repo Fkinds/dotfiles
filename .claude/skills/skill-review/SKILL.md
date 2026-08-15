@@ -1,6 +1,6 @@
 ---
 name: skill-review
-description: 既存の SKILL.md を点検し、問題を具体的に指摘して直す。frontmatter の妥当性、description の起動精度、本文の冗長さ・肥大化、責務の混在、配布先(claude.ai / Skills API)で弾かれるフィールドを検査する。スキルをレビューしてほしいと言われたとき、スキルが起動しない・起動しすぎるとき、スキルの PR を出す前やレビューするときに使う。
+description: 既存の SKILL.md を点検し、問題を具体的に指摘して直す。スキルをレビューしてほしいと言われたとき、スキルが起動しない・起動しすぎるとき、スキルの PR を出す前やレビューするときに使う。検査する範囲は frontmatter の妥当性、description の起動精度、本文の冗長さ・肥大化、責務の混在、配布先(claude.ai / Skills API)で弾かれるフィールド。
 allowed-tools:
   - Read
   - Grep
