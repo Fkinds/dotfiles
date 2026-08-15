@@ -155,7 +155,7 @@ Unexpected key(s) in SKILL.md frontmatter: argument-hint. Allowed properties are
 | 記法 | 展開されるもの |
 | --- | --- |
 | `!` の直後にバッククォートで囲んだコマンド | 実行結果。Claude が本文を読む**前**に差し込まれる(動的コンテキスト注入) |
-| `$`+`ARGUMENTS` / `$0` / `$1` | 起動時に渡された引数(全体 / 位置指定) |
+| `$`+`ARGUMENTS` / `$`+`0` / `$`+`1` | 起動時に渡された引数(全体 / 位置指定) |
 | `$`+`{CLAUDE_SKILL_DIR}` | その `SKILL.md` があるディレクトリ。同梱スクリプトの参照に使う |
 | `$`+`{CLAUDE_PROJECT_DIR}` | プロジェクトルート |
 | `$`+`{CLAUDE_SESSION_ID}` / `$`+`{CLAUDE_EFFORT}` | セッション ID / 現在の推論強度 |
