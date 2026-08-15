@@ -9,16 +9,12 @@ description: 戦略的設計の指針。同じ言葉が部署によって違う�
 リポジトリ)は、この線が引けて初めて効く。線を引かないまま戦術だけ適用すると、
 「全社で 1 つの巨大な `Customer`」ができあがる。
 
-戦術的設計は
-[ddd-domain-object-completeness](../ddd-domain-object-completeness/SKILL.md) /
-[ddd-aggregate-repository-boundary](../ddd-aggregate-repository-boundary/SKILL.md) /
-[ddd-domain-events](../ddd-domain-events/SKILL.md)。
-言葉と境界を業務から発見する進め方は
-[ddd-modeling-discovery](../ddd-modeling-discovery/SKILL.md)、
-ここでの投資判断(コア/支援/汎用)を既存コードの移行範囲に使う場合は
-[ddd-legacy-refactoring](../ddd-legacy-refactoring/SKILL.md)。
-コンテキストの内部でモジュールをどう割るかは
-[component-design](../component-design/SKILL.md)。
+関連スキル:
+
+- 戦術的設計 → [ddd-domain-object-completeness](../ddd-domain-object-completeness/SKILL.md) / [ddd-aggregate-repository-boundary](../ddd-aggregate-repository-boundary/SKILL.md)
+- 言葉と境界を業務から発見する進め方 → [ddd-modeling-discovery](../ddd-modeling-discovery/SKILL.md)
+- 投資判断(コア/支援/汎用)を既存コードの移行範囲に使う → [ddd-legacy-refactoring](../ddd-legacy-refactoring/SKILL.md)
+- コンテキストの内部でモジュールをどう割るか → [component-design](../component-design/SKILL.md)
 
 ---
 

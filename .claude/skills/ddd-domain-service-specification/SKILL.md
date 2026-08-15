@@ -11,17 +11,11 @@ usecase と同じ「ロジックの掃き溜め」になる。
 
 前提: Python 標準ライブラリの `dataclasses`。**すべてドメイン層 = stdlib のみ**。
 
-ドメインオブジェクトの設計は
-[ddd-domain-object-completeness](../ddd-domain-object-completeness/SKILL.md)、
-集約の境界は
-[ddd-aggregate-repository-boundary](../ddd-aggregate-repository-boundary/SKILL.md)、
-usecase の責務は
-[ddd-application-layer](../ddd-application-layer/SKILL.md)。
-**すでにある `XxxService` を解体する**手順は
-[ddd-legacy-refactoring](../ddd-legacy-refactoring/SKILL.md)
-(ここは新規に作る前の判断を扱う)。
-仕様を組み合わせて宣言的に書く設計全般は
-[ddd-supple-design](../ddd-supple-design/SKILL.md)。
+関連スキル:
+
+- usecase の責務との線引き → [ddd-application-layer](../ddd-application-layer/SKILL.md)
+- **すでにある `XxxService` を解体する**手順 → [ddd-legacy-refactoring](../ddd-legacy-refactoring/SKILL.md)(ここは新規に作る前の判断)
+- 仕様を組み合わせて宣言的に書く設計全般 → [ddd-supple-design](../ddd-supple-design/SKILL.md)
 
 ---
 

@@ -11,20 +11,11 @@ description: 集約(Aggregate)の境界の引き方と、リポジトリを介�
 前提: Python 標準ライブラリの `dataclasses`。ドメイン層は **stdlib のみ**に依存し、
 フレームワーク(Django 等)にも外部ライブラリにも依存しない。
 
-集約内部のオブジェクト設計(不変条件、値オブジェクト、エンティティ)は
-[ddd-domain-object-completeness](../ddd-domain-object-completeness/SKILL.md)、
-集約をまたぐ整合性は
-[ddd-domain-events](../ddd-domain-events/SKILL.md)、
-リポジトリを呼び出してトランザクションを張る側は
-[ddd-application-layer](../ddd-application-layer/SKILL.md)、
-検索・一覧などの読み取りは
-[ddd-read-model-cqrs](../ddd-read-model-cqrs/SKILL.md)。
-そもそもどのコンテキストに属する集約かは
-[ddd-bounded-context](../ddd-bounded-context/SKILL.md)、
-境界を引く材料(不変条件)を業務から引き出す工程は
-[ddd-modeling-discovery](../ddd-modeling-discovery/SKILL.md)。
-Django 固有の落とし穴は
-[ddd-django-pitfalls](../ddd-django-pitfalls/SKILL.md)。
+関連スキル:
+
+- リポジトリを呼び出してトランザクションを張る側 → [ddd-application-layer](../ddd-application-layer/SKILL.md)
+- そもそもどのコンテキストに属する集約か → [ddd-bounded-context](../ddd-bounded-context/SKILL.md)
+- Django 固有の落とし穴 → [ddd-django-pitfalls](../ddd-django-pitfalls/SKILL.md)
 
 ---
 

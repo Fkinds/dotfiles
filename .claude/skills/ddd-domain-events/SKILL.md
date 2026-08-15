@@ -9,20 +9,15 @@ description: ドメインイベントの設計指針。1 トランザクショ�
 
 前提: Python 標準ライブラリの `dataclasses`。ドメイン層は **stdlib のみ**に依存する。
 
-集約の境界とリポジトリは
-[ddd-aggregate-repository-boundary](../ddd-aggregate-repository-boundary/SKILL.md)、
-集約内部のオブジェクト設計は
-[ddd-domain-object-completeness](../ddd-domain-object-completeness/SKILL.md)、
-イベントをディスパッチする側(トランザクション境界)は
-[ddd-application-layer](../ddd-application-layer/SKILL.md)、
-イベントで読み取りモデルを更新する場合は
-[ddd-read-model-cqrs](../ddd-read-model-cqrs/SKILL.md)、
-コンテキストをまたぐ統合としてのイベントは
-[ddd-bounded-context](../ddd-bounded-context/SKILL.md)。
 **Django の signals はドメインイベントの代わりにならない** —
 [ddd-django-pitfalls](../ddd-django-pitfalls/SKILL.md)。
-どんなイベントがあるかを業務から洗い出す工程は
-[ddd-modeling-discovery](../ddd-modeling-discovery/SKILL.md)。
+
+関連スキル:
+
+- 集約内部のオブジェクト設計 → [ddd-domain-object-completeness](../ddd-domain-object-completeness/SKILL.md)
+- イベントで読み取りモデルを更新する → [ddd-read-model-cqrs](../ddd-read-model-cqrs/SKILL.md)
+- コンテキストをまたぐ統合としてのイベント → [ddd-bounded-context](../ddd-bounded-context/SKILL.md)
+- どんなイベントがあるかを業務から洗い出す工程 → [ddd-modeling-discovery](../ddd-modeling-discovery/SKILL.md)
 
 ---
 

@@ -12,24 +12,13 @@ description: アプリケーション層(ユースケース)の設計指針。us
 アプリケーション層はドメイン層に依存してよいが、**Django には依存しない**
 (トランザクション制御を除く。第 3 節)。
 
-集約とリポジトリ抽象は
-[ddd-aggregate-repository-boundary](../ddd-aggregate-repository-boundary/SKILL.md)、
-ドメインオブジェクトの設計は
-[ddd-domain-object-completeness](../ddd-domain-object-completeness/SKILL.md)、
-イベントのディスパッチは
-[ddd-domain-events](../ddd-domain-events/SKILL.md)、
-読み取り専用の処理は
-[ddd-read-model-cqrs](../ddd-read-model-cqrs/SKILL.md)、
-テストの書き方は
-[ddd-testing-strategy](../ddd-testing-strategy/SKILL.md)、
-トランザクションや signals など Django 固有の落とし穴は
-[ddd-django-pitfalls](../ddd-django-pitfalls/SKILL.md)、
-既存の `XxxService` を解体する手順は
-[ddd-legacy-refactoring](../ddd-legacy-refactoring/SKILL.md)。
-**そもそもその境界を引くべきか**、Presenter / 出力ポートを導入するかの判断は
-[clean-architecture-boundaries](../clean-architecture-boundaries/SKILL.md)、
-原則としての依存性逆転は
-[solid-principles](../solid-principles/SKILL.md)。
+関連スキル:
+
+- ドメインオブジェクトの設計 → [ddd-domain-object-completeness](../ddd-domain-object-completeness/SKILL.md)
+- **そもそもその境界を引くべきか**、Presenter / 出力ポートの判断 → [clean-architecture-boundaries](../clean-architecture-boundaries/SKILL.md)
+- 原則としての依存性逆転 → [solid-principles](../solid-principles/SKILL.md)
+- トランザクションや signals など Django 固有の落とし穴 → [ddd-django-pitfalls](../ddd-django-pitfalls/SKILL.md)
+- 既存の `XxxService` を解体する手順 → [ddd-legacy-refactoring](../ddd-legacy-refactoring/SKILL.md)
 
 ---
 

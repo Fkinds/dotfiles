@@ -9,28 +9,16 @@ description: ドメインオブジェクト(エンティティ・値オブジェ
 
 前提: Python 標準ライブラリの [`dataclasses`](https://docs.python.org/3/library/dataclasses.html)。ドメイン層は **stdlib のみ**に依存し、フレームワーク(Django 等)にも外部ライブラリにも依存しない。`kw_only=True` は Python 3.10 以降。
 
-集約の境界の引き方と永続化は
-[ddd-aggregate-repository-boundary](../ddd-aggregate-repository-boundary/SKILL.md)、
-集約をまたぐ整合性は
-[ddd-domain-events](../ddd-domain-events/SKILL.md)、
-ドメインオブジェクトを組み立てる側は
-[ddd-application-layer](../ddd-application-layer/SKILL.md)、
-どのオブジェクトにも属さないロジックの置き場所は
-[ddd-domain-service-specification](../ddd-domain-service-specification/SKILL.md)。
-そもそもどこにモデルの境界を引くかは
-[ddd-bounded-context](../ddd-bounded-context/SKILL.md)。
-ここで設計したものをどうテストするかは
-[ddd-testing-strategy](../ddd-testing-strategy/SKILL.md)。
-そもそも何をモデルにするかを見つける工程は
-[ddd-modeling-discovery](../ddd-modeling-discovery/SKILL.md)、
-金額・時間・識別子・数量の具体的な設計は
-[ddd-modeling-primitives](../ddd-modeling-primitives/SKILL.md)、
-既存コードから移行する場合は
-[ddd-legacy-refactoring](../ddd-legacy-refactoring/SKILL.md)。
-状態とライフサイクルの設計は
-[ddd-state-transition](../ddd-state-transition/SKILL.md)、
-置き場所が正しいのに書きにくいと感じたら
-[ddd-supple-design](../ddd-supple-design/SKILL.md)。
+関連スキル:
+
+- 組み立てる側(usecase) → [ddd-application-layer](../ddd-application-layer/SKILL.md)
+- モデルの境界をどこに引くか → [ddd-bounded-context](../ddd-bounded-context/SKILL.md)
+- 何をモデルにするかを見つける工程 → [ddd-modeling-discovery](../ddd-modeling-discovery/SKILL.md)
+- 金額・時間・識別子・数量の設計 → [ddd-modeling-primitives](../ddd-modeling-primitives/SKILL.md)
+- 状態とライフサイクル → [ddd-state-transition](../ddd-state-transition/SKILL.md)
+- ここで設計したもののテスト → [ddd-testing-strategy](../ddd-testing-strategy/SKILL.md)
+- 既存コードから移行する → [ddd-legacy-refactoring](../ddd-legacy-refactoring/SKILL.md)
+- 置き場所は正しいのに書きにくいと感じたら → [ddd-supple-design](../ddd-supple-design/SKILL.md)
 
 ---
 

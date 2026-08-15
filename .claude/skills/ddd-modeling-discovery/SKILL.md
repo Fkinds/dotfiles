@@ -9,18 +9,13 @@ description: ドメインモデルを「見つける」工程の進め方。何�
 「モデルが決まった後」の指針だが、その前段がここ。ここを飛ばすと、テーブル設計を
 ドメインモデルと呼び替えただけのものができる。
 
-集約の境界の引き方は
-[ddd-aggregate-repository-boundary](../ddd-aggregate-repository-boundary/SKILL.md)、
-見つけたものの実装は
-[ddd-domain-object-completeness](../ddd-domain-object-completeness/SKILL.md)、
-コンテキストの分け方は
-[ddd-bounded-context](../ddd-bounded-context/SKILL.md)、
-既存コードから始める場合は
-[ddd-legacy-refactoring](../ddd-legacy-refactoring/SKILL.md)。
-見つけたライフサイクルの実装は
-[ddd-state-transition](../ddd-state-transition/SKILL.md)、
-複数ステップの業務プロセスは
-[ddd-long-running-process](../ddd-long-running-process/SKILL.md)。
+関連スキル:
+
+- 見つけたものの実装 → [ddd-domain-object-completeness](../ddd-domain-object-completeness/SKILL.md)
+- 集約の境界の引き方 → [ddd-aggregate-repository-boundary](../ddd-aggregate-repository-boundary/SKILL.md)
+- 見つけたライフサイクルの実装 → [ddd-state-transition](../ddd-state-transition/SKILL.md)
+- 複数ステップの業務プロセス → [ddd-long-running-process](../ddd-long-running-process/SKILL.md)
+- 既存コードから始める → [ddd-legacy-refactoring](../ddd-legacy-refactoring/SKILL.md)
 
 ---
 
