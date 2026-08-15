@@ -147,6 +147,9 @@ usecase は抽象に依存している
 - **フェイクは抽象を実装する。** `OrderRepository` を継承するので、抽象を変えたら
   フェイクもコンパイルエラーになる = 乖離しない。
 - フェイクは `tests/fakes.py` にまとめ、全 usecase テストで共有する。
+  **アプリを fake モードで起動するための実装とは別物。** そちらは設定で選ばれる
+  プロダクションコードなので `infrastructure/` に置く
+  ([ddd-application-layer](../ddd-application-layer/SKILL.md) 第 5 節)。
 - **`unittest.mock.patch` でドメイン層を差し替えない。** ドメインは純粋なので
   差し替える理由がない。patch したくなったら、依存が注入されていない。
 

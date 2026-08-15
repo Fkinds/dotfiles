@@ -28,6 +28,60 @@ class CancelOrderView(APIView):
   usecase もドメインも `settings` を知らない
   ([ddd-django-pitfalls](../ddd-django-pitfalls/SKILL.md))。
 
+## 実装の切り替え — Real / Fake / Noop
+
+**ポートごとに複数の実装を持ち、どれを使うかは設定で決める。** 切り替えを用意して
+おかないと、テストや開発でも本番アダプタが動くか、モックで塞ぐ羽目になる。
+
+| 実装 | 何をするか | 使う場面 |
+| --- | --- | --- |
+| **Real** | 本物を叩く | 本番・ステージング |
+| **Fake** | 副作用を起こさず、**検証できる状態を持つ**(送った内容を配列に貯める等) | ローカル開発、E2E、デモ |
+| **Noop** | 何もせず成功を返す | 副作用だけ止めたい環境 |
+
+```python
+# infrastructure/factories.py
+def build_order_notifier() -> OrderNotifier:
+    match settings.ADAPTERS["notifier"]:
+        case "real":
+            from .adapters.notifier.real import EmailOrderNotifier   # ← 関数の中で import
+            return EmailOrderNotifier(api_key=settings.SENDGRID_API_KEY, timeout=5.0)
+        case "fake":
+            from .adapters.notifier.fake import FakeOrderNotifier
+            return FakeOrderNotifier()
+        case "noop":
+            from .adapters.notifier.noop import NoopOrderNotifier
+            return NoopOrderNotifier()
+        case other:
+            raise ImproperlyConfigured(f"未知のアダプタ設定: {other!r}")
+```
+
+- **import は分岐の中に書く。** モジュールトップで 3 つとも import すると、テストでも
+  `real.py` が読まれ、その先の SDK 初期化や認証情報の要求まで走る。**アプリの import
+  グラフから本番アダプタを外すのが、この分岐の主目的。**
+- **未知の値は例外にする。** 黙って既定へ落とすと、設定ミスが本番まで気付かれない。
+- 設定は環境ごとに置く。`base.py` に安全側の既定、`production.py` で Real に上書き。
+
+```python
+# settings/base.py        ADAPTERS = {"notifier": "noop", "payment": "noop"}
+# settings/production.py  ADAPTERS = {"notifier": "real", "payment": "real"}
+# settings/test.py        ADAPTERS = {"notifier": "fake", "payment": "fake"}
+```
+
+**既定は副作用の向きで決める。**
+
+| ポートの性質 | 設定漏れのときの既定 | 理由 |
+| --- | --- | --- |
+| 外向きの副作用(送信・課金・通知) | **Noop** | 誤爆は取り返しがつかない。何も起きない方が安全 |
+| 読み取り(取得・照会) | **例外** | 黙って空を返すと、業務判断が静かに狂う |
+
+- **本番設定で Fake / Noop を選べないようにする。** `production.py` で値を検証し、
+  `real` 以外なら起動時に落とす。ローカルの設定が本番に紛れ込む事故を防ぐ。
+- **Fake と、単体テストのフェイクは別物。** ここでの Fake は**アプリを fake モードで
+  起動する**ための実装で `infrastructure/` に置く。usecase の単体テストに直接注入する
+  in-memory 実装は `tests/` に置く([ddd-testing-strategy](../ddd-testing-strategy/SKILL.md))。
+  同じ Protocol を実装するが、寿命も置き場も違う。
+
 ## `apps.py` の `ready()` を使うとき
 
 シグナル配線やイベントハンドラの登録など、**起動時に 1 回だけ**やることはここ。
