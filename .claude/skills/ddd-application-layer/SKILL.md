@@ -189,8 +189,9 @@ class CancelOrder:
 - インフラを呼ぶ副作用(メール送信、外部 API)も抽象にする。usecase が
   `requests.post(...)` を直接書いたら、それはインフラ層の漏れ。
 
-実装(ファクトリ関数、`apps.py` の `ready()`、スコープの決め方、DI コンテナを入れるかの
-判断)は [composition-root.md](composition-root.md)。
+実装(ファクトリ関数、**設定による Real / Fake / Noop の切り替え**、`apps.py` の
+`ready()`、スコープの決め方、DI コンテナを入れるかの判断)は
+[composition-root.md](composition-root.md)。
 
 ---
 

@@ -10,6 +10,9 @@
 | dependency-cruiser | import の方向を正規表現で任意に定義 | 既に使っている / server 側と同じ仕組みにしたい |
 | eslint-plugin-boundaries | 同上を ESLint 上で。エディタ上に即出る | 開発中に気付かせたい |
 
+各ツールの設定例をこの順で載せ、最後に**どれを選んでも要る「生成物とルーティング
+ディレクトリの除外」**(末尾)を扱う。
+
 ---
 
 ## steiger(FSD 公式の linter)

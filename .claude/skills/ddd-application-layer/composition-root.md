@@ -1,7 +1,15 @@
 # composition root の組み立て
 
-[ddd-application-layer](SKILL.md) 第 5 節の詳細。具象を組み立てる場所の実装、
-`apps.py` の `ready()` を使う条件、依存のスコープ、DI コンテナを入れるかの判断。
+[ddd-application-layer](SKILL.md) 第 5 節の詳細。
+
+## 目次
+
+- **composition root の実装** — ファクトリ関数、置き場所、設定値の渡し方
+- **実装の切り替え — Real / Fake / Noop** — 設定で具象を選ぶ、分岐の中で import する、
+  設定漏れの既定、Noop に差し替えたテストが検証していないもの
+- **`apps.py` の `ready()` を使うとき** — 起動時に 1 回だけやること
+- **スコープ** — 使い捨てを既定にする
+- **DI コンテナを入れるか** — 入れてよい条件
 
 ## composition root の実装
 
