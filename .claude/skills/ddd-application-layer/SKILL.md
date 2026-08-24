@@ -1,6 +1,6 @@
 ---
 name: ddd-application-layer
-description: アプリケーション層(ユースケース)の設計指針。usecase / application service を設計・レビューするとき、ビジネスロジックが usecase に溜まってきたとき、依存をどこで組み立てるか決めるとき、テストや開発で本番のアダプタを動かしたくないとき、view や serializer から何を呼ぶか決めるときに使う。扱う範囲はドメインを組み立てるだけの薄いオーケストレーション、1 ユースケース 1 クラス、トランザクション境界、入出力 DTO による境界の遮断、依存性注入と composition root の実装(ファクトリ関数・apps.py・スコープ・DI コンテナ・設定による Real / Fake / Noop の切り替え)、層の依存方向とディレクトリ構成、ドメイン例外の変換。
+description: アプリケーション層(ユースケース)の設計指針。usecase / application service を設計・レビューするとき、ビジネスロジックが usecase に溜まってきたとき、依存をどこで組み立てるか決めるとき、テストや開発で本番のアダプタを動かしたくないとき、view や serializer から何を呼ぶか決めるときに使う。扱う範囲はドメインを組み立てるだけの薄いオーケストレーション、1 ユースケース 1 クラス、トランザクション境界、入出力 DTO による境界の遮断、依存性注入と composition root の実装(ファクトリ関数・apps.py・スコープ・DI コンテナ・設定による Real / Fake / Noop の切り替え)、層の依存方向とディレクトリ構成と CI での機械検査、ドメイン例外の変換。
 ---
 
 # DDD: アプリケーション層 (Application Layer / Use Cases)
@@ -243,7 +243,8 @@ usecases/
 - `infrastructure/` は `domain/` の**抽象を実装する**ので、矢印は内向きのまま
   (依存性逆転)。
 - **`domain/` から `usecases/` を import したら、その時点で層が壊れている。**
-  grep で `from usecases` / `import usecases` が `domain/` 配下に出ないことを確認する。
+  目視や場当たりの grep で確認しない。同梱の検査を CI に入れる
+  ([layer-enforcement.md](layer-enforcement.md) / `scripts/check_layers.py`)。
 - DTO は usecase と同じファイルに置いてよい(セットで動くため)。ファイルが膨らんだら
   `usecases/dto/` へ切り出す。
 

@@ -214,7 +214,9 @@ src/
 ```
 
 - **コンテキスト間で `domain/` を import しない。** `sales/domain` が
-  `shipping/domain` を import したら、境界が消えている。grep で確認できる形にする。
+  `shipping/domain` を import したら、境界が消えている。CI で検査する
+  ([ddd-application-layer](../ddd-application-layer/SKILL.md) の `layer-enforcement.md` —
+  `--layer-root` に app 名を渡すと境界違反を落とす)。
 - **モデル(テーブル)も分ける。** どうしても共有が必要なのは id だけ。
   他コンテキストのテーブルに ForeignKey を張らない(張った時点で結合)。
 - **サブドメインの分類に応じて構造を変えてよい。** 汎用サブドメインに

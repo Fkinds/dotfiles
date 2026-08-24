@@ -179,8 +179,8 @@ class OrderView(APIView):
 - **`urls.py` → `views.py` → `usecases/` → `domain/`** の一方向が保てていれば、
   Clean Architecture の目的(業務ルールをフレームワークから守る)はほぼ達成できる。
 - 迷ったら**内側(ドメイン)を厳しく、外側を緩く**。
-- 検証は grep でできる(
-  [component-design](../component-design/SKILL.md))。
+- 検証は機械的にできる
+  ([ddd-application-layer](../ddd-application-layer/SKILL.md) の `layer-enforcement.md`)。
 
 ---
 
@@ -213,4 +213,4 @@ class OrderView(APIView):
 - [ ] 境界を越えるのが**単純なデータ構造**(ORM オブジェクト・`Request` を渡していない)
 - [ ] Presenter / 出力ポートを、**複数の出力形式が実在する場合だけ**使っている
 - [ ] DRF の serializer と Presenter を二重に作っていない
-- [ ] 依存の向きが `urls → views → usecases → domain` の一方向で、grep で検証できる
+- [ ] 依存の向きが `urls → views → usecases → domain` の一方向で、**CI で検査されている**

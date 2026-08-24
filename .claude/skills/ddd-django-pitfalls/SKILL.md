@@ -194,6 +194,9 @@ grep -rn "^from django\|^import django\|^from rest_framework" --include="*.py" s
   && echo "ドメイン層に Django が漏れている" || echo "OK"
 ```
 
+この grep は行頭の import しか見ない。相対 import や層をまたぐ依存まで含めて検査するなら
+[ddd-application-layer](../ddd-application-layer/SKILL.md) の `layer-enforcement.md`。
+
 - 設定値が要るなら**コンストラクタか引数で渡す**。`settings` を直接読まない。
 - 現在時刻は `timezone.now()` ではなく、**引数で受け取る**
   ([ddd-modeling-primitives](../ddd-modeling-primitives/SKILL.md))。
