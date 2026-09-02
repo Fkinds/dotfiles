@@ -1,6 +1,6 @@
 {
+  "includeCoAuthoredBy": false,
   "permissions": {
-    "defaultMode": "auto",
     "allow": [
       "Bash(git add *)",
       "Bash(git commit *)",
@@ -76,14 +76,6 @@
       "WebSearch",
       "WebFetch(domain:docs.github.com)"
     ],
-    "additionalDirectories": [
-      "/Users/kogaharawataru/Work/kraken-hub/src/tests/functional/accounts/usecases/migration_ddt/case_electricity_only",
-      "/tmp",
-      "/Users/kogaharawataru/Work/kraken-hub",
-      "/Users/kogaharawataru/Work/kraken-hub/.hypothesis",
-      "/Users/kogaharawataru/.claude/agents",
-      "/Users/kogaharawataru/Work/team-dd-training-tg-repos/team-dd-training-yamanaka/docs/reviews"
-    ],
     "deny": [
       "Bash(git push --force origin main)",
       "Bash(git push --force origin master)",
@@ -91,62 +83,17 @@
       "Bash(git push -f origin master)",
       "Bash(git push --force-with-lease origin main)",
       "Bash(git push --force-with-lease origin master)"
+    ],
+    "defaultMode": "auto",
+    "additionalDirectories": [
+      "/Users/kogaharawataru/Work/kraken-hub/src/tests/functional/accounts/usecases/migration_ddt/case_electricity_only",
+      "/tmp",
+      "/Users/kogaharawataru/Work/kraken-hub",
+      "/Users/kogaharawataru/Work/kraken-hub/.hypothesis",
+      "/Users/kogaharawataru/.claude/agents",
+      "/Users/kogaharawataru/Work/team-dd-training-tg-repos/team-dd-training-yamanaka/docs/reviews"
     ]
   },
-  "statusLine": {
-    "type": "command",
-    "command": "bash ~/.claude/statusline.sh",
-    "padding": 0
-  },
-  "enabledPlugins": {
-    "lua-lsp@claude-plugins-official": true,
-    "pyright-lsp@claude-plugins-official": true
-  },
-  "language": "日本語",
-  "sandbox": {
-    "excludedCommands": ["gh", "aws", "docker"],
-    "credentials": {
-      "files": [
-        {
-          "path": "~/.aws",
-          "mode": "deny"
-        },
-        {
-          "path": "~/.ssh",
-          "mode": "deny"
-        },
-        {
-          "path": "~/.kube",
-          "mode": "deny"
-        },
-        {
-          "path": "~/.docker/config.json",
-          "mode": "deny"
-        }
-      ]
-    },
-    "enabled": false,
-    "network": {
-      "allowedDomains": [
-        "pypi.org",
-        "files.pythonhosted.org",
-        "registry.npmjs.org",
-        "github.com",
-        "api.github.com",
-        "codeload.github.com",
-        "objects.githubusercontent.com",
-        "raw.githubusercontent.com",
-        "*.amazonaws.com",
-        "registry-1.docker.io",
-        "auth.docker.io",
-        "production.cloudflare.docker.com",
-        "ghcr.io"
-      ]
-    }
-  },
-  "tui": "fullscreen",
-  "autoCompactEnabled": true,
-  "includeCoAuthoredBy": false,
   "hooks": {
     "PreToolUse": [
       {
@@ -232,5 +179,62 @@
         ]
       }
     ]
-  }
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bash ~/.claude/statusline.sh",
+    "padding": 0
+  },
+  "enabledPlugins": {
+    "lua-lsp@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true
+  },
+  "language": "日本語",
+  "sandbox": {
+    "enabled": false,
+    "network": {
+      "allowedDomains": [
+        "pypi.org",
+        "files.pythonhosted.org",
+        "registry.npmjs.org",
+        "github.com",
+        "api.github.com",
+        "codeload.github.com",
+        "objects.githubusercontent.com",
+        "raw.githubusercontent.com",
+        "*.amazonaws.com",
+        "registry-1.docker.io",
+        "auth.docker.io",
+        "production.cloudflare.docker.com",
+        "ghcr.io"
+      ]
+    },
+    "credentials": {
+      "files": [
+        {
+          "path": "~/.aws",
+          "mode": "deny"
+        },
+        {
+          "path": "~/.ssh",
+          "mode": "deny"
+        },
+        {
+          "path": "~/.kube",
+          "mode": "deny"
+        },
+        {
+          "path": "~/.docker/config.json",
+          "mode": "deny"
+        }
+      ]
+    },
+    "excludedCommands": [
+      "gh",
+      "aws",
+      "docker"
+    ]
+  },
+  "tui": "fullscreen",
+  "autoCompactEnabled": true
 }
