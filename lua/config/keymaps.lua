@@ -80,7 +80,11 @@ map("<leader>gu", pull_rebase_current_branch, "Git pull --rebase origin <current
 map("<leader>gc", ai_commit, "Git commit (Claude 生成メッセージ)")
 map("<leader>gx", "<cmd>Git commit --fixup HEAD<cr>", "Git commit --fixup HEAD")
 map("<leader>gr", "<cmd>Git rebase -i --autosquash origin/main<cr>", "Git rebase -i --autosquash origin/main")
-map("<leader>gf", "<cmd>Git fetch<cr>", "Git fetch")
+-- fetch --prune のあと、リモートで消えたブランチをローカルからも削除する
+-- （詳細と削除条件は util/git_sweep.lua）
+map("<leader>gf", function()
+  require("util.git_sweep").fetch_and_sweep()
+end, "Git fetch --prune (+ マージ済みブランチ削除)")
 
 -- ───────────────────────────────────────────────────────────────────
 -- ブランチ切替（checkout は使わず switch に統一）

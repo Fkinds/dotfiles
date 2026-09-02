@@ -65,3 +65,14 @@ vim.api.nvim_create_autocmd("DirChanged", {
     end
   end,
 })
+
+-- fugitive での git 操作（pull / merge / switch など）のあと、リモートで消えた
+-- ブランチをローカルからも掃除する。git には他ブランチを消す hook がないので
+-- fugitive の完了イベントに乗せる。消すものが無ければ無言（詳細は util/git_sweep.lua）。
+vim.api.nvim_create_autocmd("User", {
+  pattern = "FugitiveChanged",
+  group = vim.api.nvim_create_augroup("git_sweep_after_fugitive", { clear = true }),
+  callback = function()
+    require("util.git_sweep").sweep({ quiet = true })
+  end,
+})
