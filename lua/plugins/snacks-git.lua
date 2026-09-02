@@ -8,7 +8,7 @@
 return {
   "folke/snacks.nvim",
   optional = true,
-  opts = function()
+  opts = function(_, opts)
     local Snacks = require("snacks")
     local actions = require("snacks.picker.actions")
 
@@ -66,5 +66,12 @@ return {
         end, { cwd = picker:cwd() })
       end)
     end
+
+    -- 既定の git_branches は `git branch -vvl` でローカルしか列挙しない。
+    -- fetch 直後のリモートブランチを候補に出すため --all を付ける。
+    -- remotes/origin/foo は上の git_checkout が追跡ブランチとして作成する。
+    return vim.tbl_deep_extend("force", opts or {}, {
+      picker = { sources = { git_branches = { all = true } } },
+    })
   end,
 }
