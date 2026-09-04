@@ -81,8 +81,11 @@ return {
       open_mapping = [[<C-\>]],
       direction = "horizontal", -- horizontal, vertical, float, tab
       shell = vim.o.shell,
-      -- toggleterm は winborder を見ず自前の border を使うので、二重線に揃える
+      -- 枠の文字は float_opts、色は highlights（float_opts の外）で指定する。
+      -- toggleterm は winborder を見ず、既定で FloatBorder を Normal に
+      -- リンクするため、そのままだと枠だけ白く浮く。
       float_opts = { border = "double" },
+      highlights = { FloatBorder = { link = "FloatBorder" } },
     },
     config = function(_, opts)
       require("toggleterm").setup(opts)
