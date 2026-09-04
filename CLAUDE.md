@@ -75,6 +75,16 @@ gh skill update    # 更新
 上の「エージェント一覧」の `~/.claude/agent-state/` とは別物。あちらは
 ダッシュボードが読む状態ファイルの置き場。
 
+## `.claude/settings.json` と auto mode
+
+`~/.claude/settings.json` はここへの symlink なので、auto mode が集めた環境情報
+(`autoMode`)がこのリポジトリに書き込まれる。中身は内部システム名・CI シークレット
+名・本番 env のパスで、**このリポジトリは public**。`.gitattributes` の filter が
+コミット時にだけ `autoMode` を落とす(設定手順は [README.md](README.md#セットアップ))。
+
+作業ツリーには残るので、`autoMode` だけが変わったときに `git status` が clean の
+ままなのは正常。**手で消したり、filter を外して commit したりしない。**
+
 ## コミット
 
 Conventional Commits を日本語で書く。スコープはサブシステム名。

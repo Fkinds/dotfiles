@@ -17,6 +17,12 @@ init.lua / lua/ / lazy-lock.json / lazyvim.json   Neovim
 
 ```bash
 git clone <this-repo> ~/Work/dotfiles
+cd ~/Work/dotfiles
+
+# .claude/settings.json 用の filter（先に設定する。詳細は下の注記）
+git config filter.strip-automode.clean "jq 'del(.autoMode)'"
+git config filter.strip-automode.smudge cat
+git config filter.strip-automode.required true
 
 # Neovim
 ln -sfn ~/Work/dotfiles ~/.config/nvim
@@ -31,6 +37,13 @@ ln -sfn ~/Work/dotfiles/.claude/bin           ~/.claude/bin
 ```
 
 グリフ(`  🐍 ◉`)を出すのに Nerd Font が要る。ターミナルは Ghostty 前提。
+
+`~/.claude/settings.json` はこのリポジトリへの symlink なので、Claude Code の
+auto mode が集めた環境情報(`autoMode`)がそのまま public なここに書き込まれる。
+内部システム名や本番 env のパスを載せられないため、`.gitattributes` の filter で
+**コミット時にだけ `autoMode` を落とす**。手元のファイルには残るので auto mode は
+そのまま動く。上の `git config` はその実体で、リポジトリには持ち込めない
+(`required = true` なので未設定だと checkout が失敗する)。`jq` が要る。
 
 `gh skill` で入れた外部スキルは追跡していないので、新しいマシンでは入れ直す
 (導入済みの一覧は [CLAUDE.md](CLAUDE.md#外部スキル-gh-skill))。

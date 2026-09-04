@@ -1,0 +1,8 @@
+# auto mode が ~/.claude/settings.json（このファイルへの symlink）に書き戻す
+# 環境情報を、コミットから機械的に落とす。このリポジトリは public なので、
+# 内部システム名・CI シークレット名・本番 env のパスを載せられない。
+# 手元のファイルには残るため auto mode の動作は変わらない。
+#
+# filter の実体はローカルの git config に置く。新しいマシンでの設定手順は
+# README.md「セットアップ」を参照（未設定だと checkout がエラーになる）。
+.claude/settings.json filter=strip-automode
