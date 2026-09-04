@@ -81,6 +81,8 @@ return {
       open_mapping = [[<C-\>]],
       direction = "horizontal", -- horizontal, vertical, float, tab
       shell = vim.o.shell,
+      -- toggleterm は winborder を見ず自前の border を使うので、二重線に揃える
+      float_opts = { border = "double" },
     },
     config = function(_, opts)
       require("toggleterm").setup(opts)

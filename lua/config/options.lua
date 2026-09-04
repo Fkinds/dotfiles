@@ -26,3 +26,22 @@ opt.scrolloff = 10
 -- プロジェクトローカル設定（repo 直下の .nvim.lua）を読み込む
 -- 初回は信頼確認が出るので :trust で許可する（:h exrc / :h trust）
 opt.exrc = true
+
+-- ウィンドウ境界を二重線で描く。LazyVim が fold 用に設定済みの fillchars へ
+-- 境界文字だけを足す（:h fillchars）。交差点（╬ ╣ ╠ ╦ ╩）まで指定しないと、
+-- 分割が増えたときに線が繋がらず途切れて見える。
+-- 線の色は config/autocmds.lua で配色に合わせて上げている。
+opt.fillchars:append({
+  vert = "║",
+  horiz = "═",
+  verthoriz = "╬",
+  vertleft = "╣",
+  vertright = "╠",
+  horizdown = "╦",
+  horizup = "╩",
+})
+
+-- 補完・ホバー・通知などフロートの枠も同じ二重線に揃える（nvim 0.11+）。
+-- プラグインが border を明示している場合はそちらが優先されるので、
+-- toggleterm など個別指定が要るものは各 plugins/*.lua で合わせる。
+vim.o.winborder = "double"

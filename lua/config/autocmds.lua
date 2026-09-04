@@ -76,3 +76,34 @@ vim.api.nvim_create_autocmd("User", {
     require("util.git_sweep").sweep({ quiet = true })
   end,
 })
+
+-- ウィンドウ境界の線を、フロートの枠と同じ色に揃える。
+-- 既定の WinSeparator は Normal の背景より暗く（tokyonight-moon なら
+-- fg=#1b1d2b に対して bg=#222436）、fillchars で二重線を指定しても線が
+-- 引かれて見えない。配色側が「枠に使う色」として定義している FloatBorder
+-- から借りるので、colorscheme を変えても破綻しない。
+-- 配色の適用でハイライトは初期化されるため、切り替えのたびに掛け直す。
+local function sync_border_hl()
+  local accent = vim.api.nvim_get_hl(0, { name = "FloatBorder", link = false }).fg
+    or vim.api.nvim_get_hl(0, { name = "Special", link = false }).fg
+  if not accent then
+    return
+  end
+  vim.api.nvim_set_hl(0, "WinSeparator", { fg = accent })
+  -- neo-tree は winhighlight で WinSeparator を自前の名前に差し替えるため個別に要る
+  vim.api.nvim_set_hl(0, "NeoTreeWinSeparator", { link = "WinSeparator" })
+end
+
+-- 配色の適用は autocmds.lua が読まれたあとに走り、ColorScheme のハンドラ内で
+-- 設定しても配色側の nvim_set_hl に上書きされる。vim.schedule で一段遅らせて、
+-- 適用処理が終わりきってから掛ける。
+local function schedule_sync()
+  vim.schedule(sync_border_hl)
+end
+
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = vim.api.nvim_create_augroup("mechanical_borders", { clear = true }),
+  callback = schedule_sync,
+})
+
+schedule_sync()
