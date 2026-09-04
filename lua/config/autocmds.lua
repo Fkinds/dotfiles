@@ -107,3 +107,49 @@ vim.api.nvim_create_autocmd("ColorScheme", {
 })
 
 schedule_sync()
+
+-- 画面の外周に線を引く（詳細は util/window_frame.lua）。
+-- 端に接するウィンドウが変わるのは分割・リサイズ・タブ切り替えのときなので、
+-- そのたびに掛け直す。BufWinEnter は、あとから statuscolumn を自分で設定する
+-- プラグイン（neo-tree など）に線を上書きされたぶんを取り返すために要る。
+local window_frame = vim.api.nvim_create_augroup("window_frame", { clear = true })
+
+vim.api.nvim_create_autocmd({
+  "VimEnter",
+  "WinNew",
+  "WinClosed",
+  "WinResized",
+  "VimResized",
+  "TabEnter",
+  "BufWinEnter",
+}, {
+  group = window_frame,
+  callback = function()
+    require("util.window_frame").schedule()
+  end,
+})
+
+-- 右端の線は実体がウィンドウなので、入ってしまったら追い出す。
+vim.api.nvim_create_autocmd("WinEnter", {
+  group = window_frame,
+  callback = function()
+    require("util.window_frame").avoid()
+  end,
+})
+
+-- セッション保存に空のウィンドウが混ざらないよう、終了前に畳む。
+vim.api.nvim_create_autocmd("VimLeavePre", {
+  group = window_frame,
+  callback = function()
+    require("util.window_frame").close_all()
+  end,
+})
+
+-- :q で閉じるのが最後の実ウィンドウなら、右端の線を先に畳む。
+-- 残っているとウィンドウが 1 枚残った扱いになり、Neovim が終わらない。
+vim.api.nvim_create_autocmd("QuitPre", {
+  group = window_frame,
+  callback = function()
+    require("util.window_frame").close_if_last()
+  end,
+})
