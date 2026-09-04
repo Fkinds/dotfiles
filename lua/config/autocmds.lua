@@ -77,21 +77,21 @@ vim.api.nvim_create_autocmd("User", {
   end,
 })
 
--- ウィンドウ境界とフロートの枠の色。同じターミナルに並ぶ Claude Code の
--- 入力欄の区切り線と同じグレーに揃える（実測値。あちらは配色に追従しない）。
+-- ウィンドウ境界の線を、フロートの枠と同じ色に揃える。
 -- 既定の WinSeparator は Normal の背景より暗く（tokyonight-moon なら
 -- fg=#1b1d2b に対して bg=#222436）、fillchars で二重線を指定しても線が
--- 引かれて見えない。
+-- 引かれて見えない。配色側が「枠に使う色」として定義している FloatBorder
+-- から借りるので、colorscheme を変えても破綻しない（tokyonight なら青）。
 -- 配色の適用でハイライトは初期化されるため、切り替えのたびに掛け直す。
-local BORDER_FG = 0x888888
-
 local function sync_border_hl()
-  vim.api.nvim_set_hl(0, "WinSeparator", { fg = BORDER_FG })
+  local accent = vim.api.nvim_get_hl(0, { name = "FloatBorder", link = false }).fg
+    or vim.api.nvim_get_hl(0, { name = "Special", link = false }).fg
+  if not accent then
+    return
+  end
+  vim.api.nvim_set_hl(0, "WinSeparator", { fg = accent })
   -- neo-tree は winhighlight で WinSeparator を自前の名前に差し替えるため個別に要る
   vim.api.nvim_set_hl(0, "NeoTreeWinSeparator", { link = "WinSeparator" })
-  -- フロートの枠も同じ線として扱う。背景は配色のものを残す
-  local float_bg = vim.api.nvim_get_hl(0, { name = "FloatBorder", link = false }).bg
-  vim.api.nvim_set_hl(0, "FloatBorder", { fg = BORDER_FG, bg = float_bg })
 end
 
 -- 配色の適用は autocmds.lua が読まれたあとに走り、ColorScheme のハンドラ内で
