@@ -42,8 +42,19 @@ ln -sfn ~/Work/dotfiles/.claude/bin           ~/.claude/bin
 auto mode が集めた環境情報(`autoMode`)がそのまま public なここに書き込まれる。
 内部システム名や本番 env のパスを載せられないため、`.gitattributes` の filter で
 **コミット時にだけ `autoMode` を落とす**。手元のファイルには残るので auto mode は
-そのまま動く。上の `git config` はその実体で、リポジトリには持ち込めない
-(`required = true` なので未設定だと checkout が失敗する)。`jq` が要る。
+そのまま動く。`jq` が要る。
+
+filter の実体は git config なのでリポジトリには持ち込めず、**設定を忘れても git は
+何も言わずに素通しする**(`required = true` は filter が定義済みで失敗したときに
+効くもので、未定義には効かない)。clone したら真っ先に設定し、効いていることを
+確かめる。
+
+```bash
+git config --get filter.strip-automode.clean   # jq 'del(.autoMode)' が出れば設定済み
+
+# 実際に落ちるかの確認。false が出れば効いている
+git add .claude/settings.json && git show :.claude/settings.json | jq 'has("autoMode")'
+```
 
 `gh skill` で入れた外部スキルは追跡していないので、新しいマシンでは入れ直す
 (導入済みの一覧は [CLAUDE.md](CLAUDE.md#外部スキル-gh-skill))。

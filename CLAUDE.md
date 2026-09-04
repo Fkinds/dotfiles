@@ -85,6 +85,13 @@ gh skill update    # 更新
 作業ツリーには残るので、`autoMode` だけが変わったときに `git status` が clean の
 ままなのは正常。**手で消したり、filter を外して commit したりしない。**
 
+filter が未設定の環境では git は黙って素通しする。`.claude/settings.json` を
+コミットするときは、index に入っていないことを確かめる。
+
+```bash
+git show :.claude/settings.json | jq 'has("autoMode")'   # false なら安全
+```
+
 ## コミット
 
 Conventional Commits を日本語で書く。スコープはサブシステム名。
