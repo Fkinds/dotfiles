@@ -34,6 +34,10 @@ ln -sfn ~/Work/dotfiles/.claude/skills        ~/.claude/skills
 ln -sfn ~/Work/dotfiles/.claude/agents        ~/.claude/agents
 ln -sfn ~/Work/dotfiles/.claude/hooks         ~/.claude/hooks
 ln -sfn ~/Work/dotfiles/.claude/bin           ~/.claude/bin
+
+# MCP サーバー(~/.claude.json に入るので symlink では揃わない。要 gh auth login と uv)
+# プロファイル名は dev のもの。本番を渡さない
+AWS_MCP_PROFILE=<dev のプロファイル> ~/.claude/bin/setup-mcp.sh
 ```
 
 グリフ(`  🐍 ◉`)を出すのに Nerd Font が要る。ターミナルは Ghostty 前提。

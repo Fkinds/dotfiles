@@ -75,6 +75,18 @@ gh skill update    # 更新
 上の「エージェント一覧」の `~/.claude/agent-state/` とは別物。あちらは
 ダッシュボードが読む状態ファイルの置き場。
 
+## MCP サーバー (`.claude/bin/setup-mcp.sh`)
+
+MCP の設定は `~/.claude.json`(管理外)に入るので、登録は `setup-mcp.sh` に並べて
+流す。サーバーを足すときもこのスクリプトに書き、`claude mcp add` を手で打たない。
+
+**トークンを書かない。** 認証は `headersHelper` で実行時に取る(GitHub は
+`gh auth token`)。AWS のプロファイル名も社内名なので、`AWS_MCP_PROFILE` で
+実行時に渡す。
+
+`aws-api` は全プロジェクトから呼べるので、**dev のプロファイル + `READ_OPERATIONS_ONLY`
+に固定する。** 本番のプロファイルを渡さず、読み取り専用も外さない。
+
 ## `.claude/settings.json` と auto mode
 
 `~/.claude/settings.json` はここへの symlink なので、auto mode が集めた環境情報
