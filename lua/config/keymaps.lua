@@ -112,6 +112,15 @@ map("<leader>gD", function()
   require("snacks").picker.git_log()
 end, "Git switch --detach (commit picker)")
 
+-- worktree: picker で選んで切替（<c-a> 作成 / <c-x> 削除）。置き場所と切替の挙動は
+-- util/git_worktree.lua
+map("<leader>gt", function()
+  require("util.git_worktree").pick()
+end, "Git worktree (picker)")
+map("<leader>gT", function()
+  require("util.git_worktree").add()
+end, "Git worktree add (作成して切替)")
+
 -- ───────────────────────────────────────────────────────────────────
 -- Protocol ⇄ Impl ジャンプ（命名規約 Xxx ⇄ XxxImpl ベース）
 -- injector の DI バインディングは実行時情報のため LSP では追えない。
