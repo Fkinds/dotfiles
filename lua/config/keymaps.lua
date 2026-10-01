@@ -92,6 +92,14 @@ map("<leader>gZ", function()
   require("snacks").picker.git_stash()
 end, "Git stash 一覧 (apply)")
 
+-- 作業ツリーの変更を破棄する。index と untracked は触らない（util/git_restore.lua）
+map("<leader>gR", function()
+  require("util.git_restore").pick()
+end, "Git restore (ファイルを選ぶ)")
+map("<leader>gX", function()
+  require("util.git_restore").all()
+end, "Git restore (すべて)")
+
 -- ───────────────────────────────────────────────────────────────────
 -- ブランチ切替（checkout は使わず switch に統一）
 -- snacks picker 側の `git checkout` 排除は lua/plugins/snacks-git.lua を参照。
