@@ -71,7 +71,6 @@ end
 
 map("<leader>gs", "<cmd>Git<cr>", "Git status (fugitive)")
 map("<leader>gl", "<cmd>Git log --oneline<cr>", "Git log --oneline")
-map("<leader>gz", "<cmd>Git stash<cr>", "Git stash")
 map("<leader>ga", "<cmd>Git add .<cr>", "Git add .")
 map("<leader>gA", "<cmd>Git add --all<cr>", "Git add --all")
 map("<leader>gp", "<cmd>Git push origin HEAD<cr>", "Git push origin HEAD")
@@ -85,6 +84,13 @@ map("<leader>gr", "<cmd>Git rebase -i --autosquash origin/main<cr>", "Git rebase
 map("<leader>gf", function()
   require("util.git_sweep").fetch_and_sweep()
 end, "Git fetch --prune (+ マージ済みブランチ削除)")
+
+-- stash は push と一覧を z / Z の対にまとめる。LazyVim 既定の <leader>gS（一覧）は
+-- 名前が紛らわしいので外している（lua/plugins/snacks-git.lua）。
+map("<leader>gz", "<cmd>Git stash<cr>", "Git stash push")
+map("<leader>gZ", function()
+  require("snacks").picker.git_stash()
+end, "Git stash 一覧 (apply)")
 
 -- ───────────────────────────────────────────────────────────────────
 -- ブランチ切替（checkout は使わず switch に統一）

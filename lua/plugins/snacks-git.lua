@@ -8,6 +8,11 @@
 return {
   "folke/snacks.nvim",
   optional = true,
+  keys = {
+    -- LazyVim 既定の stash 一覧。push の <leader>gz と "Git stash" / "Git Stash" で
+    -- 並んで紛らわしいので外し、<leader>gZ に移した（lua/config/keymaps.lua）。
+    { "<leader>gS", false },
+  },
   opts = function(_, opts)
     local Snacks = require("snacks")
     local actions = require("snacks.picker.actions")
