@@ -1,10 +1,12 @@
--- 画面の外周に線を引く。
+-- 画面の外周に計器パネル風の枠を描く。
+--
+-- 上辺にはファイル名のラベルを刻む（╔═┤ window_frame.lua ├════）。
 --
 -- Neovim には通常ウィンドウを枠で囲む機能がなく（枠を持てるのは float だけ）、
 -- fillchars の区切り線も隣り合うウィンドウの間にしか引かれない。そのため
 -- 画面の端に接する辺には線が出ない。辺ごとに借りる場所が違う。
 --
---   上端 … winbar。端に接するウィンドウの 1 行目を線で埋める
+--   上端 … winbar。端に接するウィンドウの 1 行目。線とラベルを描く
 --   左端 … statuscolumn。行番号の左に 1 列足す。ただしバッファ末尾より下の行では
 --          statuscolumn が評価されないので、そこは fillchars の eob で埋める
 --   右端 … 幅 1 の空ウィンドウ。行番号・サイン・折りたたみはどれも左側の機能で、
@@ -18,6 +20,12 @@
 --
 -- 線は画面の端に接するウィンドウにだけ引く。全ウィンドウに引くと、内側で
 -- 区切り線と重なって線が二重になる。
+--
+-- 四隅のうち右上の角（╗）だけは出せない。右辺の線は場所取りウィンドウとの
+-- 区切り線が描いていて、区切り線は列ごと・全行で同じ文字になる。winbar が
+-- 書けるのはその 1 列手前までなので、角を置く場所がない。上辺の ═ を区切り線の
+-- ║ に突き当てて終える。残る 3 つは、左上が winbar の 1 文字目、
+-- 左下と右下が lualine の両端（plugins/lualine.lua）。
 local M = {}
 
 local HL = "%#WinSeparator#"
@@ -40,13 +48,76 @@ local at_left = {} ---@type table<integer, true>
 local edge_wins = {} ---@type table<integer, integer>
 local edge_buf ---@type integer?
 
--- 上端の横線。ウィンドウ幅（垂直区切り線の列は含まない）ぶん埋める。
+-- ラベルに出す名前。
+-- ファイルを開いていないバッファ（neo-tree・ターミナルなど）は、バッファ名が
+-- 内部の識別子（neo-tree filesystem [1] や term://…//123:zsh）で読めないので
+-- filetype を使う。help はバッファ名がそのまま見出しになるので名前側を採る。
+local function label(win)
+  local buf = vim.api.nvim_win_get_buf(win)
+  local buftype = vim.bo[buf].buftype
+  local text
+  if buftype == "" or buftype == "help" then
+    local name = vim.api.nvim_buf_get_name(buf)
+    text = name ~= "" and vim.fn.fnamemodify(name, ":t") or ""
+  end
+  if not text or text == "" then
+    text = vim.bo[buf].filetype
+  end
+  if text == "" then
+    text = buftype ~= "" and buftype or "no name"
+  end
+  if vim.bo[buf].modified then
+    text = text .. " ●"
+  end
+  return text
+end
+
+-- 上端の横線。ウィンドウ幅（垂直区切り線の列は含まない）ぶん埋め、
+-- ファイル名のラベルを刻む。左端に接するウィンドウだけ角（╔）から始める。
+--
+--   ╔═┤ window_frame.lua ├══════════
+--
+-- 見ているウィンドウのラベルだけ明るくして、どれが手元かを枠の側でも示す。
 function M.winbar()
   local win = vim.g.statusline_winid
   if not win or not vim.api.nvim_win_is_valid(win) then
     return ""
   end
-  return HL .. string.rep("═", vim.api.nvim_win_get_width(win))
+  local width = vim.api.nvim_win_get_width(win)
+  local lead = at_left[win] and "╔═" or "═"
+  -- ラベルの飾り（┤ ├ と前後の空白）と角が食う幅
+  local frame = vim.fn.strdisplaywidth(lead) + vim.fn.strdisplaywidth("┤  ├")
+
+  -- ラベルを置く余地が無いほど狭いウィンドウでは線だけ引く。
+  local room = width - frame
+  if room < 4 then
+    return HL .. lead .. string.rep("═", math.max(width - vim.fn.strdisplaywidth(lead), 0))
+  end
+
+  -- 入りきらない名前は頭を削って末尾（拡張子の側）を残す。日本語のファイル名が
+  -- あるので、文字数ではなく表示幅で詰める。… のぶん 1 幅を空ける。
+  local text = label(win)
+  local chars = vim.fn.strchars(text)
+  if vim.fn.strdisplaywidth(text) > room then
+    local keep = chars
+    while keep > 0 and vim.fn.strdisplaywidth(vim.fn.strcharpart(text, chars - keep)) > room - 1 do
+      keep = keep - 1
+    end
+    text = "…" .. vim.fn.strcharpart(text, chars - keep)
+  end
+
+  local name_hl = win == vim.api.nvim_get_current_win() and "%#Normal#" or "%#Comment#"
+  local tail = width - frame - vim.fn.strdisplaywidth(text)
+  return table.concat({
+    HL,
+    lead,
+    "┤ ",
+    name_hl,
+    text,
+    HL,
+    " ├",
+    string.rep("═", math.max(tail, 0)),
+  })
 end
 
 -- 左端の縦線。行番号・サイン・折りたたみは LazyVim（snacks）が組んだものを
@@ -286,6 +357,48 @@ function M.refresh()
     if not is_edge(win) and vim.wo[win].statuscolumn ~= STATUSCOLUMN then
       vim.wo[win].statuscolumn = STATUSCOLUMN
     end
+  end
+end
+
+-- lualine が組んだ statusline の余白を、枠の線で埋める。
+--
+--   ╚═╡ NORMAL  main ╞═══════════════════════════════╡ 1:1  18:00 ╞═╝
+--
+-- lualine は左寄せと右寄せの境目に %= を置く。%= は空白でしか伸びないので、
+-- 伸ばさずに測って（maxwidth=0 なら %= は 0 幅）残り幅を出し、その幅ぶんの
+-- ═ に置き換える。lualine.statusline() を包むだけなので、lualine 側の
+-- 更新契機や設定には手を入れない。
+local hooked = false
+
+function M.hook_statusline()
+  if hooked then
+    return
+  end
+  hooked = true
+
+  local lualine = require("lualine")
+  local inner = lualine.statusline
+  lualine.statusline = function(...)
+    local text = inner(...)
+    if type(text) ~= "string" then
+      return text
+    end
+    -- %= が 1 つだけのときに限る。複数あると、残りが空白で伸びて幅が合わない。
+    local pos = text:find("%=", 1, true)
+    if not pos or text:find("%=", pos + 2, true) then
+      return text
+    end
+
+    local ok, measured = pcall(vim.api.nvim_eval_statusline, text, { maxwidth = 0, highlights = false })
+    if not ok then
+      return text
+    end
+    local width = vim.o.laststatus == 3 and vim.o.columns or vim.api.nvim_win_get_width(0)
+    local fill = width - measured.width
+    if fill < 1 then
+      return text
+    end
+    return text:sub(1, pos - 1) .. HL .. string.rep("═", fill) .. text:sub(pos + 2)
   end
 end
 
