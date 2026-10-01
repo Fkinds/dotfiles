@@ -53,15 +53,23 @@ gh skill update    # 更新
 **自作スキルは、外部スキルが持たない運用ルールだけを持つ。** コマンドの使い方を
 書き写すと、本体の更新に追従できなくなる。
 
-### `skill-authoring` の前提のうち、このリポジトリに当てはまらないもの
+### 置き場所・検査・提出
 
-`skill-authoring` は社内スキル集リポジトリ向けに書かれている。次の 3 点は読み替える。
+`skill-authoring` / `agent-authoring` は、これらをリポジトリの CLAUDE.md に委ねている。
+このリポジトリでは次のとおり。
 
-| skill-authoring の記述 | このリポジトリでは |
-| --- | --- |
-| ステップ1: リポジトリ直下に `<skill-name>/SKILL.md` を置く | `.claude/skills/<skill-name>/SKILL.md` に置く |
-| ステップ5: pre-commit (`markdownlint-cli2` + `validate_skills.py`) を通す | どちらも存在しない。手元で YAML と行数を確認する |
-| ステップ6: feature ブランチ + PR、`main` への直接 push は禁止 | `main` へ直接コミットする |
+- 置き場所: `.claude/skills/<skill-name>/SKILL.md`、サブエージェントは `.claude/agents/<name>.md`。
+  どちらも symlink 経由で全プロジェクトに効く。
+- 静的検査: pre-commit は無い。frontmatter が YAML として読めることと行数を手元で確かめる。
+- 提出: `main` へ直接コミットする。
+
+```bash
+python3 -c 'import sys, yaml; yaml.safe_load(open(sys.argv[1]).read().split("---")[1])' <SKILL.md>
+```
+
+**他リポジトリのプロジェクトスキルを、ここへ上書きコピーしない。** 社内のモジュール名や
+規約がそのまま public に出るうえ、全プロジェクトのスキルがそのリポジトリ前提になる。
+取り込むなら固有の部分を外してから。
 
 ## サブエージェント (`.claude/agents/`)
 

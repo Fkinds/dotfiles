@@ -1,6 +1,6 @@
 ---
 name: skill-authoring
-description: 新しい Claude スキル(SKILL.md)を作成する手順。「スキルを作りたい」「スラッシュコマンドを追加したい」「この手順をスキル化して」と言われたとき、あるいは同じ指示を繰り返し貼り付けている・CLAUDE.md の一節が手順に育ってしまったものを切り出すときに使う。扱う範囲は Claude が正しく自動起動できる description の設計、frontmatter の選び方、本文の構成、補助ファイルへの分割、動作検証、このリポジトリへの提出まで。
+description: 新しい `SKILL.md` を作成する。スキルやスラッシュコマンドを追加するとき、繰り返し使う手順をスキルにまとめるときに使う。
 allowed-tools:
   - Write
   - Edit
@@ -14,7 +14,7 @@ allowed-tools:
 既存スキルの点検は [skill-review](../skill-review/SKILL.md) を使う。作るものが
 サブエージェント定義なら [agent-authoring](../agent-authoring/SKILL.md)。
 
-## そもそもスキルにすべきか
+## スキルが適する内容
 
 スキルにする:
 
@@ -31,28 +31,28 @@ allowed-tools:
   → サブエージェント([agent-authoring](../agent-authoring/SKILL.md))。スキルは主会話の
   文脈で動き、サブエージェントは会話履歴を持たない。
 
-## ステップ1 — 置き場所と名前を決める
+## 1. 置き場所と名前を決める
 
-| 置き場所 | パス | 有効範囲 |
-| --- | --- | --- |
-| Personal | `~/.claude/skills/<skill-name>/SKILL.md` | 自分の全プロジェクト |
-| Project | `.claude/skills/<skill-name>/SKILL.md` | そのプロジェクトのみ |
-| Plugin | `<plugin>/skills/<skill-name>/SKILL.md` | プラグインが有効な場所 |
+| 置き場所 | パス                                     | 有効範囲               |
+| -------- | ---------------------------------------- | ---------------------- |
+| Personal | `~/.claude/skills/<skill-name>/SKILL.md` | 自分の全プロジェクト   |
+| Project  | `.claude/skills/<skill-name>/SKILL.md`   | そのプロジェクトのみ   |
+| Plugin   | `<plugin>/skills/<skill-name>/SKILL.md`  | プラグインが有効な場所 |
 
-**このリポジトリでは** リポジトリ直下に `<skill-name>/SKILL.md` を置く(社内スキル集としての
-配布元であり、`.claude/skills/` ではない)。利用者が personal / project の位置へ配置する。
+置き場所はリポジトリの CLAUDE.md に従う。指定がなければ、そのリポジトリだけで使うものは
+Project、自分の全プロジェクトで使うものは Personal に置く。
 
 命名:
 
 - ディレクトリ名は kebab-case。**personal / project スキルではディレクトリ名がそのまま
   `/コマンド名`** になる(frontmatter の `name` は一覧上の表示名にすぎない)。
 - 名詞句か動詞句で、何をするかが名前だけで分かるものにする(`helper` / `utils` は不可)。
-- ファイル名は厳密に `SKILL.md`。`skill.md` は CI(`scripts/validate_skills.py`)で落ちる。
+- ファイル名は厳密に `SKILL.md`。`skill.md` ではスキルとして認識されない。
 
-## ステップ2 — frontmatter を書く
+## 2. frontmatter を書く
 
-`---` で挟んだ YAML。**このリポジトリでは `name` と `description` が必須**で、
-`name` は kebab-case かつディレクトリ名と一致していなければならない(CI が検査する)。
+`---` で挟んだ YAML。`name` と `description` は必須で、`name` は kebab-case かつ
+ディレクトリ名と一致させる。
 
 ```yaml
 ---
@@ -61,7 +61,7 @@ description: 何をするか。そして、ユーザーが〇〇を求めたと�
 ---
 ```
 
-### description が最重要
+### `description` を書く
 
 Claude はスキル一覧に載った `description` だけを見て「今これを使うか」を判断する。
 本文は判断材料にならない。
@@ -80,31 +80,31 @@ Claude はスキル一覧に載った `description` だけを見て「今これ�
 # NG: 何をするかしか書いていない。トリガー語がない
 description: コードレビューを行います。
 
-# OK: What + When + トリガー語
+# 対象と起動条件を書く
 description: 変更した Python コードをレビューし、複雑度・命名・エラー処理を指摘する。ユーザーがコードのレビュー・最適化・リファクタリングを求めたとき、あるいは PR を出す前に使う。
 ```
 
 ### よく使う任意フィールド
 
-| フィールド | 用途 |
-| --- | --- |
-| `when_to_use` | トリガー語や例示リクエストを追記する。`description` に連結され、同じ 1,536 文字上限に含まれる |
-| `allowed-tools` | そのスキルを起動したターンの間、許可を求めずに使えるツール。次のユーザーメッセージで失効する |
-| `disallowed-tools` | スキルが有効な間、使わせないツール |
-| `disable-model-invocation: true` | Claude の自動起動を禁じ、`/名前` の手動起動だけにする |
-| `user-invocable: false` | `/` メニューから隠す。Claude だけが使う背景知識向け |
-| `paths` | glob に一致するファイルを扱っているときだけ自動起動させる |
-| `argument-hint` / `arguments` | 引数の補完ヒントと、`$名前` で本文に展開する名前付き引数 |
-| `context: fork` / `agent` / `background` | サブエージェントとして隔離実行する |
-| `model` / `effort` | そのスキルが有効な間のモデル・推論強度 |
+| フィールド                               | 用途                                                                                          |
+| ---------------------------------------- | --------------------------------------------------------------------------------------------- |
+| `when_to_use`                            | トリガー語や例示リクエストを追記する。`description` に連結され、同じ 1,536 文字上限に含まれる |
+| `allowed-tools`                          | そのスキルを起動したターンの間、許可を求めずに使えるツール。次のユーザーメッセージで失効する  |
+| `disallowed-tools`                       | スキルが有効な間、使わせないツール                                                            |
+| `disable-model-invocation: true`         | Claude の自動起動を禁じ、`/名前` の手動起動だけにする                                         |
+| `user-invocable: false`                  | `/` メニューから隠す。Claude だけが使う背景知識向け                                           |
+| `paths`                                  | glob に一致するファイルを扱っているときだけ自動起動させる                                     |
+| `argument-hint` / `arguments`            | 引数の補完ヒントと、`$名前` で本文に展開する名前付き引数                                      |
+| `context: fork` / `agent` / `background` | サブエージェントとして隔離実行する                                                            |
+| `model` / `effort`                       | そのスキルが有効な間のモデル・推論強度                                                        |
 
 起動制御の使い分け:
 
-| 設定 | ユーザーが `/` で起動 | Claude が自動起動 |
-| --- | --- | --- |
-| 既定 | できる | できる |
-| `disable-model-invocation: true` | できる | **できない**(description が context に載らない) |
-| `user-invocable: false` | **できない** | できる |
+| 設定                             | ユーザーが `/` で起動 | Claude が自動起動                               |
+| -------------------------------- | --------------------- | ----------------------------------------------- |
+| 既定                             | できる                | できる                                          |
+| `disable-model-invocation: true` | できる                | **できない**(description が context に載らない) |
+| `user-invocable: false`          | **できない**          | できる                                          |
 
 `disable-model-invocation: true` は副作用のある手順(`/deploy`、`/commit`、通知送信)に付ける。
 実行タイミングを Claude に決めさせないためのもの。
@@ -129,13 +129,13 @@ Unexpected key(s) in SKILL.md frontmatter: argument-hint. Allowed properties are
 **この記法を本文で説明するときは、`!` とバッククォートを隣接させない。** インライン
 コードで囲んでも実行され、そのスキルが読み込めなくなる(`command not found`)。
 
-## ステップ3 — 本文を書く
+## 3. 本文を書く
 
 **一度ロードされた本文は、そのセッションの間ずっと context に残り続ける。** Claude は後続の
 ターンでファイルを読み直さない。つまり本文の 1 行 1 行が継続的なトークンコストであり、かつ
 「タスク中ずっと有効な指示」として書く必要がある(一度きりの手順書ではない)。
 
-- **やることを書く。なぜ・どうしてそうなったかは書かない。** CLAUDE.md と同じ簡潔さの基準。
+- 判断に必要な内容と手順を書く。経緯や詳細な背景は補助ファイルへ移す。
 - 手順は番号付きで、順序に意味がある形にする。判断が要る箇所は表かチェックリストにする。
 - 具体例は 1 つに絞る。バリエーションの列挙は補助ファイルへ。
 - **`SKILL.md` は 500 行以下**に収める。超えたら分割する([skill-scoping](../skill-scoping/SKILL.md))。
@@ -151,13 +151,13 @@ Unexpected key(s) in SKILL.md frontmatter: argument-hint. Allowed properties are
 分けないと、この表自体が読み込み時に展開されて絶対パスやセッション ID に化ける
 (コードブロックの中でも展開される)。
 
-| 記法 | 展開されるもの |
-| --- | --- |
-| `!` の直後にバッククォートで囲んだコマンド | 実行結果。Claude が本文を読む**前**に差し込まれる(動的コンテキスト注入) |
-| `$`+`ARGUMENTS` / `$`+`0` / `$`+`1` | 起動時に渡された引数(全体 / 位置指定) |
-| `$`+`{CLAUDE_SKILL_DIR}` | その `SKILL.md` があるディレクトリ。同梱スクリプトの参照に使う |
-| `$`+`{CLAUDE_PROJECT_DIR}` | プロジェクトルート |
-| `$`+`{CLAUDE_SESSION_ID}` / `$`+`{CLAUDE_EFFORT}` | セッション ID / 現在の推論強度 |
+| 記法                                              | 展開されるもの                                                          |
+| ------------------------------------------------- | ----------------------------------------------------------------------- |
+| `!` の直後にバッククォートで囲んだコマンド        | 実行結果。Claude が本文を読む**前**に差し込まれる(動的コンテキスト注入) |
+| `$`+`ARGUMENTS` / `$`+`0` / `$`+`1`               | 起動時に渡された引数(全体 / 位置指定)                                   |
+| `$`+`{CLAUDE_SKILL_DIR}`                          | その `SKILL.md` があるディレクトリ。同梱スクリプトの参照に使う          |
+| `$`+`{CLAUDE_PROJECT_DIR}`                        | プロジェクトルート                                                      |
+| `$`+`{CLAUDE_SESSION_ID}` / `$`+`{CLAUDE_EFFORT}` | セッション ID / 現在の推論強度                                          |
 
 スキルのディレクトリを指す変数は本文と `allowed-tools` の Bash ルールの両方で展開される
 ので、両方に同じ書き方をすれば同梱スクリプトを許可プロンプトなしで実行できる。
@@ -174,7 +174,7 @@ allowed-tools: Bash(<SKILL_DIR>/scripts/render.sh *)
 
 上の `<SKILL_DIR>` の位置に `$`+`{CLAUDE_SKILL_DIR}` を続けて書く。
 
-## ステップ4 — 補助ファイルへ逃がす
+## 4. 補助ファイルへ分ける
 
 詳細な参照資料、長い例、スクリプトは別ファイルにし、`SKILL.md` からは「何が書いてあって
 いつ読むか」を示すリンクだけを置く。**リンクされたファイルは必要になったときだけ読まれる**。
@@ -197,14 +197,15 @@ my-skill/
 
 分割の判断基準は [skill-scoping](../skill-scoping/SKILL.md) を見る。
 
-## ステップ5 — 検証する
+## 5. 検証する
 
 起動したことは「見つけられた」ことしか意味しない。**起動精度**と**出力品質**を分けて確認する。
 
-1. **静的検査**を通す。このリポジトリでは pre-commit。
+1. **静的検査**を通す。リポジトリに pre-commit などの検査があれば、変更したファイルに走らせる。
+   無ければ、frontmatter が YAML として読めることと行数を手元で確かめる。
 
    ```bash
-   pre-commit run --all-files   # markdownlint-cli2 + validate_skills.py
+   pre-commit run --files .claude/skills/<skill-name>/SKILL.md
    ```
 
 2. **新しいセッション**で試す。スキルを書いた会話の残り文脈が、本文の指示不足を隠してしまう。
@@ -217,23 +218,9 @@ my-skill/
    (`/plugin install skill-creator@claude-plugins-official`)。テストケース、隔離実行、
    採点、あり/なしのベンチマーク、description のチューニングまでやる。
 
-## ステップ6 — このリポジトリへ提出する
+## 6. 提出する
 
-1. `main` を最新化し、作業ブランチを切る。種別は `feature/`(新スキル追加)。
-
-   ```bash
-   git switch main && git pull
-   git switch -c feature/<skill-name>-skill
-   ```
-
-2. コミットは [Conventional Commits](https://www.conventionalcommits.org/)。
-   例: `feat: skill-authoring スキルを追加`
-3. Push して PR を作成する。`main` への直接 push は禁止。
-4. レビュー指摘は fixup コミット(`git commit --fixup <hash>`)で対応し、マージ前に
-   `git rebase -i --autosquash main` で畳み込む。
-
-詳細はリポジトリの運用ルールに従う。**このリポジトリ(dotfiles)での読み替えは
-ルートの `CLAUDE.md` を見る** — 配置先・pre-commit・提出手順が上記と異なる。
+ブランチの切り方、コミット、レビューはリポジトリの運用ルール(CLAUDE.md)に従う。
 
 ## チェックリスト
 
