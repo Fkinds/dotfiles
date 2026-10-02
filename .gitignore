@@ -11,6 +11,8 @@ data
 .claude/.cc-writes/
 .claude/settings.local.json
 .claude/*.bak-*
+# Claude Code が同期する公式スキル(anthropic-skills:*)。アカウント単位の生成物
+.claude/skills/synced/
 
 # gh skill install で入れた外部スキル(frontmatter の metadata.github-repo が目印)。
 # `gh skill update` が管理するので git では追跡しない。導入手順は CLAUDE.md。
