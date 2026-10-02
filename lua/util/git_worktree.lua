@@ -1,7 +1,7 @@
 -- git worktree の一覧・切替・作成・削除。
 --
 -- 置き場所は `<メイン worktree の親>/<リポジトリ名>-worktrees/<ブランチ名の最後の要素>`。
--- 例: ~/Work/kraken-hub で feat/foo を作ると ~/Work/kraken-hub-worktrees/foo。
+-- 例: ~/Work/myapp で feat/foo を作ると ~/Work/myapp-worktrees/foo。
 --
 -- 「切替」は nvim の cwd をその worktree へ移すこと。開いているファイルと同じ相対パスが
 -- 切替先にもあれば開き直し、neo-tree は BufEnter の追従（config/autocmds.lua）に任せる。
