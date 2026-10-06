@@ -49,6 +49,8 @@ gh skill update    # 更新
 - `composition-patterns` / `react-best-practices` / `web-design-guidelines`
   (`vercel-labs/agent-skills`)。React の合成パターン、パフォーマンス、
   アクセシビリティ。FSD のレイヤー設計は自作の `fsd-*` が持つ。
+- `aws-cdk`(`aws/agent-toolkit-for-aws`)。同名が `plugins/aws-core/skills/` にもあり
+  曖昧になるので、第 2 引数は `core-skills/aws-cdk` と渡す。
 
 **自作スキルは、外部スキルが持たない運用ルールだけを持つ。** コマンドの使い方を
 書き写すと、本体の更新に追従できなくなる。
