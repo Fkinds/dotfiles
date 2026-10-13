@@ -103,6 +103,28 @@
             "timeout": 5
           }
         ]
+      },
+      {
+        "matcher": "mcp__.*[Aa]sana.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/python3 ~/.claude/hooks/asana-scope-guard.py pre",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "mcp__.*[Aa]sana.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/usr/bin/python3 ~/.claude/hooks/asana-scope-guard.py post",
+            "timeout": 5
+          }
+        ]
       }
     ],
     "SessionStart": [
