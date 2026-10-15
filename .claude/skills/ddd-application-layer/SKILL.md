@@ -110,7 +110,8 @@ class CancelOrder:
 
 > `django.db.transaction` を usecase に直接書くか、`UnitOfWork` 抽象で包むかは選択。
 > 包む場合も**抽象はアプリケーション層、実装はインフラ層**にする。
-> どちらにせよ「境界は usecase」は動かない。
+> どちらにせよ「境界は usecase」は動かない。包むかどうかの判断と、`durable=True` で
+> 入れ子を防ぐ書き方は [unit-of-work-identity-map](../unit-of-work-identity-map/SKILL.md) 第 3 節。
 
 イベントのディスパッチ順序の詳細は
 [ddd-domain-events](../ddd-domain-events/SKILL.md)。

@@ -212,7 +212,8 @@ relay は送信成功後に停止すると同じメッセージを再送する�
 トランザクション管理は Usecase / インフラの責務で、ドメイン層に `django.db` を持ち込まない
 ([ddd-application-layer](../ddd-application-layer/SKILL.md))。例の `transaction_manager()` は、
 Usecase 層に置いたトランザクションの port を指す。既にトランザクションの port があるなら、新しく
-Unit of Work を作る前にそれで足りるかを確認する。`on_commit()` のような Django 固有のコールバックが
+Unit of Work を作る前にそれで足りるかを確認する
+([unit-of-work-identity-map](../unit-of-work-identity-map/SKILL.md) 第 3 節)。`on_commit()` のような Django 固有のコールバックが
 必要な場合も、Usecase に直接 import せず同じ形で adapter の契約として公開する。
 
 ## 6. 非同期ハンドラは冪等にする

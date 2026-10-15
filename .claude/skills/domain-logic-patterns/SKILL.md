@@ -158,6 +158,10 @@ Django のモデルは、行 1 つをオブジェクト 1 つで表し、保存�
 3. **フィールドを外から直接書き換えない。** `r.status = "cancelled"` ではなく
    `r.cancel(now)` を呼ぶ。
 
+同じ行を 2 か所で `get()` してそれぞれ `save()` すると、全列を書いて互いの変更を消す。
+インスタンスの渡し方と `update_fields` の使い方は
+[unit-of-work-identity-map](../unit-of-work-identity-map/SKILL.md) 第 5 節。
+
 ### 軽量版から本格版へ上げるサイン
 
 - オブジェクトの形がテーブルの形からずれ始めた(値オブジェクトにしたいフィールド群、
