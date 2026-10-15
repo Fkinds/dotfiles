@@ -146,6 +146,9 @@ Django のモデルは、行 1 つをオブジェクト 1 つで表し、保存�
 | 追加コスト | ほぼなし | 変換とリポジトリの維持 |
 | 設計の指針 | 下の 3 つのルール | [ddd-domain-object-completeness](../ddd-domain-object-completeness/SKILL.md) / [ddd-aggregate-repository-boundary](../ddd-aggregate-repository-boundary/SKILL.md) |
 
+スキーマを変えられるか、admin などの道具で書き込むかといった**永続化の側の事情**による
+判断は [data-source-patterns](../data-source-patterns/SKILL.md)。
+
 **軽量版でも守る 3 つのルール。** 守っておけば、本格版へ機械的に上げられる。
 
 1. **振る舞いのメソッドの中で `save()` を呼ばない。** 判断と状態変更だけを行い、

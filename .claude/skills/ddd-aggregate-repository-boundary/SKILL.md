@@ -224,6 +224,8 @@ class DjangoOrderRepository(OrderRepository):
 - **遅延読み込みに依存しない。** 集約は境界の全体を一度に読む(`select_related` /
   `prefetch_related`)。ドメイン層が ORM のクエリを引き起こすと、層が壊れている。
 - リポジトリ実装がトランザクションを張る範囲は、**集約 1 つ分**。
+- 値オブジェクト・子の集まり・状態ごとの型をテーブルにどう対応づけるか、admin などの
+  道具がこの変換を素通りする問題は [data-source-patterns](../data-source-patterns/SKILL.md)。
 
 ---
 
