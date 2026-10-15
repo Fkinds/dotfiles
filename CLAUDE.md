@@ -51,6 +51,7 @@ gh skill update    # 更新
   アクセシビリティ。FSD のレイヤー設計は自作の `fsd-*` が持つ。
 - `aws-cdk`(`aws/agent-toolkit-for-aws`)。同名が `plugins/aws-core/skills/` にもあり
   曖昧になるので、第 2 引数は `core-skills/aws-cdk` と渡す。
+- `grilling`(`mattpocock/skills`)。計画や設計を、推奨の答えを添えた質問の往復で詰める。
 
 **自作スキルは、外部スキルが持たない運用ルールだけを持つ。** コマンドの使い方を
 書き写すと、本体の更新に追従できなくなる。
