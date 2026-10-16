@@ -14,6 +14,9 @@ init / add / submit / rebase / sync / merge の詳細、非対話フラグ、レ
 
 対象は `gh stack submit` で PR を作るとき。単発の PR には関係しない。
 
+**どう分けるか(PR の単位、行数、積む順序)は [micro-pr](../micro-pr/SKILL.md)。**
+ここは分け終えたあとの出し方だけを扱う。
+
 ---
 
 ## 1. draft のまま作る
