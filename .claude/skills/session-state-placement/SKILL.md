@@ -17,6 +17,8 @@ Session State Patterns(クライアント・サーバー・データベースの
 - フロントエンドでの URL の状態とルートパラメータ → [fsd-pages-layer](../fsd-pages-layer/SKILL.md)
 - 下書きを状態として持つときの型の分け方 → [ddd-state-transition](../ddd-state-transition/SKILL.md)
 - 仮押さえのように、確保に業務上の意味があるもの → [edit-conflict-control](../edit-conflict-control/SKILL.md) 第 7 節
+- Cookie・JWT・OAuth の標準(RFC 6265 / 7519 / 8725 / 9700)と、規格の現行版の確かめ方
+  → [standards-compliance](../standards-compliance/SKILL.md)
 
 ---
 

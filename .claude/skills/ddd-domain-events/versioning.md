@@ -154,7 +154,9 @@ def normalize_order_placed_v1(payload: dict[str, object]) -> dict[str, object]:
 ```
 
 - 金額は 10 進数の文字列か最小通貨単位の整数にし、通貨と丸め規則を契約に含める。
-- 日時はタイムゾーン付き ISO 8601、UUID などの識別子は文字列で表す。
+- 日時はオフセット付きの RFC 3339(ISO 8601 のプロファイル)、UUID などの識別子は文字列で表す。
+- 金額・日時・識別子の形式が従う標準(ISO 4217、RFC 3339、RFC 9562)は
+  [standards-compliance](../standards-compliance/SKILL.md)。
 - `Enum` は Python の `name` や内部の数値を直接出さず、公開契約用の安定した文字列へ変換する
   ([ddd-state-transition](../ddd-state-transition/SKILL.md))。
 - 値オブジェクトの `pickle` やクラス名依存のシリアライザを公開形式にしない。

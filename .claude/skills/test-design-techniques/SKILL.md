@@ -316,6 +316,8 @@ def test_年齢の境界で区分が切り替わる(age: int, expected: FareCate
   英語名を添えて書いている。
 - ここに書いた規格の版と節番号は**執筆時点のスナップショット**。規格に基づくと
   説明する必要がある場面では、現行版を確かめる。
+- テスト以外の領域の標準と、規格の現行版の確かめ方は
+  [standards-compliance](../standards-compliance/SKILL.md)。
 
 ---
 

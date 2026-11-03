@@ -12,6 +12,9 @@ description: 実務で必ず踏む題材のモデリング指針。金額や日�
 
 Python 標準ライブラリのみ。`Decimal` / `datetime` / `uuid` / `enum` を使う。
 
+通貨コード(ISO 4217)・日時(RFC 3339 / IANA tz)・UUID(RFC 9562)など、外とやり取りする
+形式が従う標準は [standards-compliance](../standards-compliance/SKILL.md)。
+
 ---
 
 ## 1. 金額 (Money)
