@@ -232,7 +232,8 @@ Process Manager をドメインオブジェクトにするか Usecase 層の調�
 
 - 現在時刻は Usecase が現在時刻を返す port から取り、タイムゾーン付きの `datetime` として
   プロセスのメソッドへ渡す
-  ([ddd-modeling-primitives](../ddd-modeling-primitives/SKILL.md))。
+  ([ddd-modeling-primitives](../ddd-modeling-primitives/SKILL.md))。期限や時刻を外へ出すときの
+  形式(RFC 3339)は [standards-compliance](../standards-compliance/SKILL.md)。
 - 通常の結果とタイムアウトが競合したら、同じロックと状態遷移規則で一方だけを適用する。
 - 一時障害には上限付きの再試行とバックオフを使う。上限到達後の状態と通知先を決める。
 - 外部呼び出しの応答を失った場合は、再実行前に `operation_id` で結果を照会する。照会も

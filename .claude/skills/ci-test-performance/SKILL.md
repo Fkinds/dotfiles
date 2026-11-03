@@ -132,6 +132,9 @@ STORAGES = {...}                    # 外部ストレージを使わない
 | ログを無効化 | I/O とフォーマットのコストを削る |
 | メール・キャッシュ・ストレージをメモリに | 外部依存を消す |
 
+MD5 のハッシュは**テスト専用**の設定に閉じる。本番のパスワードの規則は NIST SP 800-63B-4 に従う
+([standards-compliance](../standards-compliance/SKILL.md))。
+
 - **テスト専用設定は本番と別ファイルに。** `if TESTING:` の分岐を本番設定に
   入れない([ddd-django-pitfalls](../ddd-django-pitfalls/SKILL.md))。
 - `TransactionTestCase` / `pytest.mark.django_db(transaction=True)` は

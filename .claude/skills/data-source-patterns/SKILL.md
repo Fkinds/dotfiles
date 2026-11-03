@@ -125,6 +125,8 @@ def overdue_loans(today: date) -> list[LoanModel]:
 | 状態ごとに型が違う | **1 テーブル + 状態の列**。状態ごとの列は NULL 許容にし、DB の制約で組み合わせを守る | 型ごとに列がほとんど重ならない → 型ごとのテーブル(抽象基底) |
 | 識別子 | [ddd-modeling-primitives](../ddd-modeling-primitives/SKILL.md) | — |
 
+- 金額を列に展開するとき、通貨の列は ISO 4217 の 3 文字のコードで持つ
+  ([standards-compliance](../standards-compliance/SKILL.md))。
 - **マルチテーブル継承は使わない**(理由は [solid-principles](../solid-principles/SKILL.md))。
   ドメイン側の型の分け方を、テーブル継承に写さない。
 - **JSON 列には形のバージョンを入れる。** 中身の形の変更は migration に現れないので、

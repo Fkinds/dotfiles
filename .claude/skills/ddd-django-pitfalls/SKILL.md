@@ -187,6 +187,9 @@ from django.core.exceptions import ValidationError   # NG — 独自の DomainEr
 from rest_framework import serializers               # NG
 ```
 
+現在時刻は `django.utils.timezone` ではなく、タイムゾーン付きの `datetime` を引数で受け取る。
+外へ出すときの日時とタイムゾーンの標準は [standards-compliance](../standards-compliance/SKILL.md)。
+
 **検出は grep でできる。** CI か手元で回す。
 
 ```bash

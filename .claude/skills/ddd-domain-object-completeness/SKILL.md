@@ -94,6 +94,8 @@ class Entity:
 
 - `ValueObject`: `dataclass` のデフォルト(`eq=True`)で値による等価性が得られる。`frozen=True` なので `__hash__` も自動生成される。
 - `Entity`: `eq=False` にして `__eq__` / `__hash__` を手書きし、id ベースの等価性にする。
+- `id` に使う UUID の版(v4 / v7)は RFC 9562 が定める
+  ([standards-compliance](../standards-compliance/SKILL.md))。
 - どちらも `frozen`。エンティティは、可変にするのではなく、**新しい frozen インスタンスを生成すること(`dataclasses.replace(...)`)で「変化」する**。
 
 ### `eq=False` の注意点(重要)
