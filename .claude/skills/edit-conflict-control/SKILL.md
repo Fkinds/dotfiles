@@ -18,6 +18,8 @@ Offline Concurrency Patterns。各パターンの要約は
 関連スキル:
 
 - エラーレスポンスの形(Problem Details) → [http-error-response](../http-error-response/SKILL.md)
+- 条件付きリクエスト(ETag / `If-Match` / 412 / 428)を定める RFC 9110 と、規格の現行版の確かめ方
+  → [standards-compliance](../standards-compliance/SKILL.md)
 - 同じ送信が 2 回届く問題(二重送信)は別の問題 → [api-reliability](../api-reliability/SKILL.md) の Idempotency-Key
 - 仮押さえを状態として持つ → [ddd-state-transition](../ddd-state-transition/SKILL.md)
 

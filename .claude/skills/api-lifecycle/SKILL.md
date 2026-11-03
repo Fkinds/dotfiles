@@ -14,6 +14,8 @@ description: 公開した Web API を変更・廃止していくための指針�
 [api-reliability](../api-reliability/SKILL.md)、
 公開済みイベントのバージョニングは
 [ddd-domain-events](../ddd-domain-events/SKILL.md)。
+HTTP 以外も含めた標準の索引と、規格の現行版の確かめ方は
+[standards-compliance](../standards-compliance/SKILL.md)。
 
 ---
 
@@ -119,7 +121,8 @@ OpenAPI 3.2.0(2025-09)。デファクト標準で、GitHub や Stripe は公式�
   デファクトで出しておき、RFC になってから移す。
 - **`X-` 接頭辞を新しく作らない**(RFC 6648)。標準化されたときに改名が要る。
 - このスキルに書いてある RFC 番号やデファクトの実例は**スナップショット**。
-  重要な判断の前には上の手順で現況を確かめる。
+  重要な判断の前には上の手順で現況を確かめる。RFC 以外(ISO / W3C / NIST など)の
+  確かめ方は [standards-compliance](../standards-compliance/SKILL.md) 第 4 節。
 
 ---
 

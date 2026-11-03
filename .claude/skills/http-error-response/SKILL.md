@@ -14,6 +14,8 @@ description: HTTP API がエラーを返すときの形式を決める指針。A
 [exception-design](../exception-design/SKILL.md)、
 バージョニングと廃止の伝え方は
 [api-lifecycle](../api-lifecycle/SKILL.md)。
+HTTP 以外も含めた標準の索引と、規格の現行版の確かめ方は
+[standards-compliance](../standards-compliance/SKILL.md)。
 
 ---
 

@@ -16,6 +16,8 @@ description: クライアントが繰り返し呼ぶ HTTP API の取り決めを
 [adapter-design](../adapter-design/SKILL.md)、
 結果が不明なときの扱いは
 [operation-result-design](../operation-result-design/SKILL.md)。
+HTTP 以外も含めた標準の索引と、規格の現行版の確かめ方は
+[standards-compliance](../standards-compliance/SKILL.md)。
 
 ---
 
