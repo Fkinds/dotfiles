@@ -16,13 +16,14 @@ allowed-tools:
 1. 対象の `SKILL.md` をすべて読む。指定がなければ変更されたものを対象にする。
 
    ```bash
-   git diff --name-only main...HEAD -- '**/SKILL.md'
+   git status --porcelain -- '*SKILL.md'              # 未コミットの変更と新規ファイル
+   git diff --name-only main...HEAD -- '*SKILL.md'    # ブランチで積んだ変更
    ```
 
 2. リポジトリに pre-commit などの静的検査があれば実行し、失敗した項目を報告する。
 
    ```bash
-   pre-commit run --files $(git diff --name-only main...HEAD -- '**/SKILL.md')
+   pre-commit run --files <手順 1 で挙げた SKILL.md>
    ```
 
 3. 下記の検査項目を順に当てる。
