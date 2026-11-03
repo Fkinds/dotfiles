@@ -28,8 +28,8 @@ ln -sfn ~/Work/dotfiles/.claude/bin ~/.claude/bin
 - 作成・編集のあとは `skill-review` で点検する。
 - スキルを分けるか迷ったら `skill-scoping`。
 
-`SKILL.md` に触れると `.claude/hooks/skill-guard.sh`(PreToolUse hook)が自動で
-この注意を出す。`~/.claude/hooks` 経由で読まれるので**全プロジェクトで効く**。
+セッションで最初に `SKILL.md` に触れたとき、`.claude/hooks/skill-guard.sh`(PreToolUse hook)が
+この注意を 1 回だけ出す。`~/.claude/hooks` 経由で読まれるので**全プロジェクトで効く**。
 無効にするなら `settings.json` の `hooks.PreToolUse` を消す。
 
 ### 外部スキル (`gh skill`)
