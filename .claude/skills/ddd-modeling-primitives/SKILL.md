@@ -57,6 +57,8 @@ class Money(ValueObject):
 - **異なる通貨の演算は例外。** 換算はドメインサービスの仕事
   ([ddd-domain-service-specification](../ddd-domain-service-specification/SKILL.md))。
 - **通貨ごとに小数桁が違う**(JPY は 0、USD は 2)。桁を通貨に持たせる。
+  通貨コードと小数桁は ISO 4217 に従う
+  ([standards-compliance](../standards-compliance/SKILL.md))。
 
 ### 丸めと配分
 
@@ -103,6 +105,8 @@ datetime.now(UTC)
 
 - **naive `datetime` をドメインに入れない。** 構築時に弾く。
 - **保存と計算は UTC、表示だけローカル。** 変換はインターフェース層。
+- 外へ出す日時の文字列は RFC 3339、タイムゾーンは IANA tz database の名前(`Asia/Tokyo`)で持つ
+  ([standards-compliance](../standards-compliance/SKILL.md))。
 - **`datetime.now()` をドメインの中で呼ばない。** テストできなくなる。
   現在時刻は**引数で渡す**(第4節の共通則)。
 
@@ -182,7 +186,8 @@ class CustomerId(ValueObject):
 
 - 保存前に id がないと、`OrderPlaced(order_id=...)` を集約の中で作れない
   ([ddd-domain-events](../ddd-domain-events/SKILL.md))。**これが決定打。**
-- 索引効率が問題なら **UUID v7**(時刻順)を使う。連番の代わりになる。
+- 索引効率が問題なら **UUID v7**(時刻順)を使う。連番の代わりになる。UUID の版の定義は
+  RFC 9562([standards-compliance](../standards-compliance/SKILL.md))。
 - **採番はファクトリの引数で受け取る**か `default_factory` に閉じる。
 
 ### 業務上の番号は別物

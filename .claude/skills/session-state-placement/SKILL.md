@@ -119,10 +119,12 @@ URL・React の state・Web Storage・Cookie は、利用者が自由に書き�
 
 - **Cookie のセッションを既定にする。** `HttpOnly` で JavaScript から読めず、サーバー側で
   消せば即座に無効になる。DRF の `SessionAuthentication` はログイン済みのリクエストに
-  CSRF の検証を強制するので、SPA は CSRF トークンを送る。
+  CSRF の検証を強制するので、SPA は CSRF トークンを送る。Cookie の属性は RFC 6265。
+  `SameSite` は改訂版(6265bis)で定義されている
+  ([standards-compliance](../standards-compliance/SKILL.md))。
 - **JWT をアクセストークンに使うなら、期限を短くする。** 署名だけで検証できる代わりに、
   発行後に取り消すにはサーバー側に失効リストが要る。失効リストを持つなら、
-  セッションと比べた利点は薄い。
+  セッションと比べた利点は薄い。JWT の定義は RFC 7519、検証の作法は RFC 8725。
 - **トークンを localStorage に置かない**(第 4 節)。ブラウザで使うなら `HttpOnly` の Cookie に入れる。
 - **JWT の中の権限は発行時点の値。** 権限を外しても期限までは残る。重要な操作は
   リクエストごとに DB で確かめる。
