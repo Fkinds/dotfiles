@@ -6,6 +6,10 @@ Neovim (LazyVim) と Claude Code の個人設定リポジトリ。
 `skills` / `agents` / `hooks` / `bin` は、このリポジトリへの symlink。新しい
 マシンでは張り直す(手順は [README.md](README.md#セットアップ))。
 
+全プロジェクト共通の指示 `~/.claude/CLAUDE.md` も、`.claude/CLAUDE.user.md` への symlink。
+`.claude/CLAUDE.md` という名前にしないこと。このリポジトリのプロジェクト指示としても
+読み込まれ、同じ内容が 2 回入る。
+
 ```bash
 ln -sfn ~/Work/dotfiles/.claude/bin ~/.claude/bin
 ```
