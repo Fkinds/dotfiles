@@ -18,6 +18,8 @@ description: DDD の層ごとのテスト方針。ドメイン層・usecase の�
 [ddd-aggregate-repository-boundary](../ddd-aggregate-repository-boundary/SKILL.md)、
 イベントは
 [ddd-domain-events](../ddd-domain-events/SKILL.md)。
+1 つの振る舞いにどのケースを何件書くかは
+[test-design-techniques](../test-design-techniques/SKILL.md)。
 
 ---
 
