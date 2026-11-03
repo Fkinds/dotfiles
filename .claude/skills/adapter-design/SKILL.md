@@ -192,7 +192,8 @@ class CreditBureauAdapter(CreditChecker):
   ([operation-result-design](../operation-result-design/SKILL.md))。
 - **副作用のある呼び出しをリトライするなら冪等キーが要る。** ないままリトライすると
   二重実行になる。相手が 429 を返したら `Retry-After` に従う。自分が API を
-  提供する側での実装は [api-reliability](../api-reliability/SKILL.md)。
+  提供する側での実装は [api-reliability](../api-reliability/SKILL.md)。`Retry-After` は
+  RFC 9110、429 は RFC 6585 が定める([standards-compliance](../standards-compliance/SKILL.md))。
 - **リトライの上限を超えたら、意味のある例外を投げる。** 黙って `None` を返さない。
 
 ---

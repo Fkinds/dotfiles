@@ -13,6 +13,8 @@ HTTP への変換方針は
 [ddd-application-layer](../ddd-application-layer/SKILL.md) 第 6 節、
 変換後のレスポンス本体の形式は
 [http-error-response](../http-error-response/SKILL.md)。
+エラーを API へ出すときに従う標準と、規格の現行版の確かめ方は
+[standards-compliance](../standards-compliance/SKILL.md)。
 
 > **本スキル群の他のコード例について**: 他の DDD スキルは簡潔さのため
 > `raise ValueError(...)` と書いている。**実プロジェクトでは、以下の階層に置き換える。**

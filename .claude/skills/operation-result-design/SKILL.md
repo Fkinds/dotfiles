@@ -188,6 +188,8 @@ class Order(Entity):
   ([ddd-application-layer](../ddd-application-layer/SKILL.md))。
 - **エラー時のボディの形式**(RFC 9457 Problem Details)とステータスの選び分けは
   [http-error-response](../http-error-response/SKILL.md)。
+- ステータスの意味を定める RFC 9110 と、規格の現行版の確かめ方は
+  [standards-compliance](../standards-compliance/SKILL.md)。
 
 ---
 
