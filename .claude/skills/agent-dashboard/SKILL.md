@@ -1,6 +1,6 @@
 ---
 name: agent-dashboard
-description: 起動中の Claude Code セッションを一覧するダッシュボード(.claude/bin/agent-dashboard.sh)の仕様。ダッシュボードの表示を変えるとき、状態ファイルや hook の配線を直すとき、キャッシュの挙動を確かめるとき、Neovim のサイドバーで表示が崩れるときに使う。扱う範囲は 3 セクションの構成と 1 セッション 3 行の表示、グリフと色の使い分け、幅が足りないときに削る順序、agent-state.sh が書く状態ファイルの置き場、transcript の増分読みとキャッシュ。
+description: 起動中の Claude Code セッションを一覧するダッシュボード(.claude/bin/agent-dashboard.sh)の仕様。ダッシュボードの表示を変えるとき、状態ファイルや hook の配線を直すとき、キャッシュの挙動を確かめるとき、Neovim のサイドバーで表示が崩れるときに使う。
 ---
 
 # エージェント一覧ダッシュボード

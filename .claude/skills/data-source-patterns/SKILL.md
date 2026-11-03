@@ -1,6 +1,6 @@
 ---
 name: data-source-patterns
-description: DB を読み書きするコード(データソース層)の形を選び、オブジェクトとテーブルを対応づける指針。Django モデルをそのままドメインとして使うか(Active Record)、ドメインオブジェクトと分けてリポジトリで変換するか(Data Mapper)決めるとき、ORM の呼び出しが view や serializer に散らばってきたとき、値オブジェクトや子の集まり・状態ごとの型をテーブルにどう保存するか迷うとき、admin や ModelSerializer がドメインの規則を素通りしていないか確かめるときに使う。扱う範囲は Table Data Gateway / Row Data Gateway / Active Record / Data Mapper の違いと選び方、トランザクションスクリプトでのクエリの集め方、Data Mapper での対応づけ(列への展開・JSON 列・子テーブル・継承)、Django の道具との付き合い方、生 SQL の置き場所。
+description: DB を読み書きするコード(データソース層)の形を選び、オブジェクトとテーブルを対応づける指針。Django モデルをそのままドメインとして使うか(Active Record)、ドメインオブジェクトと分けてリポジトリで変換するか(Data Mapper)決めるとき、ORM の呼び出しが view や serializer に散らばってきたとき、値オブジェクトや子の集まり・状態ごとの型をテーブルにどう保存するか迷うとき、admin や ModelSerializer がドメインの規則を素通りしていないか確かめるときに使う。
 ---
 
 # データソース層の設計 (Data Source Patterns)

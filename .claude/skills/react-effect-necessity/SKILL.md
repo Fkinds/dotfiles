@@ -1,6 +1,6 @@
 ---
 name: react-effect-necessity
-description: その useEffect が本当に要るかを判断する決定木。useEffect を書こうとしているとき、Effect が増えて追えなくなったとき、state が一拍遅れて同期するとき、Effect が無限ループするとき、props の変更に合わせて state を作り直したいときに使う。扱う範囲は「外部システムと同期しているか」から始まる 6 分岐の決定木、分岐ごとの行き先(レンダリング中の計算・イベントハンドラ・useMemo・key によるリセット・useSyncExternalStore)、Effect を使ってよい場合の見分け、疑わしい Effect を機械的に洗い出す方法。
+description: その useEffect が本当に要るかを判断する決定木。useEffect を書こうとしているとき、Effect が増えて追えなくなったとき、state が一拍遅れて同期するとき、Effect が無限ループするとき、props の変更に合わせて state を作り直したいときに使う。
 ---
 
 # React: その useEffect は要らない
