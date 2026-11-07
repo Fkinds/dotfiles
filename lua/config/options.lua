@@ -5,7 +5,7 @@
 -- Ensure ~/.local/bin is in PATH for uv and other tools
 vim.env.PATH = vim.env.HOME .. "/.local/bin:" .. vim.env.PATH
 
--- Python: LSP/型チェッカーに basedpyright を使う（pyright/ty は無効化）
+-- Python: LSP/型チェッカーに basedpyright を使う（pyright はこの値で、ty は plugins/python.lua で無効化）
 -- ty は Django の TextChoices（ChoicesType メタクラス）を解釈できず、
 -- `State.QUEUED` を tuple[str, str] と誤検知する（astral-sh/ty#3535, open）。
 -- basedpyright は django-stubs を読んで正しく enum メンバーとして解決する。
