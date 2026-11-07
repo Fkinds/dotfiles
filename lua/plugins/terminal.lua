@@ -37,14 +37,18 @@ local function toggle_dashboard()
   dashboard:toggle(dashboard_size())
 end
 
+-- 現在のバッファを含むプロジェクトのルート。見つからなければ nvim の cwd。
+local function project_root()
+  return vim.fs.root(0, { "pyproject.toml", ".git" }) or vim.fn.getcwd()
+end
+
 -- pyproject.toml のあるルートで CLI を走らせる。結果を読めるよう終了後も開いたままにし、
 -- format や実行でファイルが書き換わるので checktime でバッファを読み直す。
 local function run_in_root(cmd)
-  local root = vim.fs.root(0, { "pyproject.toml", ".git" }) or vim.fn.getcwd()
   local Terminal = require("toggleterm.terminal").Terminal
   Terminal:new({
     cmd = cmd,
-    dir = root,
+    dir = project_root(),
     direction = "horizontal",
     close_on_exit = false,
     on_exit = function()
@@ -69,6 +73,41 @@ local function save_current_python_file()
   end
   vim.cmd("write")
   return vim.fn.shellescape(path)
+end
+
+-- mypy の設定ファイルと、mypy の設定を書くセクション。mypy が探す順に並べる。
+local MYPY_CONFIGS = {
+  { file = "mypy.ini", section = "mypy" },
+  { file = ".mypy.ini", section = "mypy" },
+  { file = "pyproject.toml", section = "tool.mypy" },
+  { file = "setup.cfg", section = "mypy" },
+}
+
+-- root の mypy 設定が検査対象（files / packages / modules）を決めているか。
+-- mypy は最初に見つかった設定だけを使うので、セクションのある最初のファイルで判定する。
+local function mypy_targets_configured(root)
+  for _, config in ipairs(MYPY_CONFIGS) do
+    local path = root .. "/" .. config.file
+    if vim.uv.fs_stat(path) then
+      local in_section, found_section = false, false
+      for line in io.lines(path) do
+        local header = line:match("^%s*%[(.-)%]%s*$")
+        if header then
+          in_section = header == config.section
+          found_section = found_section or in_section
+        elseif in_section then
+          local key = line:match("^%s*([%w_]+)%s*=")
+          if key == "files" or key == "packages" or key == "modules" then
+            return true
+          end
+        end
+      end
+      if found_section then
+        return false
+      end
+    end
+  end
+  return false
 end
 
 return {
@@ -135,6 +174,29 @@ return {
           end
         end,
         desc = "uv: ruff format + check (現在のファイル)",
+      },
+      {
+        "<leader>ct",
+        function()
+          -- ty は注釈のない関数をとがめないので、注釈漏れまで見たいときは mypy --strict に掛ける。
+          -- --with mypy で、dev 依存に mypy の無いプロジェクトでも動かす（入っていればそれを使う）。
+          local file = save_current_python_file()
+          if file then
+            run_in_root("uv run --with mypy mypy --strict " .. file)
+          end
+        end,
+        desc = "uv: mypy --strict (現在のファイル)",
+      },
+      {
+        "<leader>cT",
+        function()
+          -- 厳しさも対象もプロジェクトの mypy 設定に従う（--strict は付けない）。
+          -- 設定が対象を決めているのに . を渡すと上書きされ、mutants/ のような対象外まで拾う。
+          -- 決めていなければ対象を渡さないと mypy が止まるので、ルートを丸ごと渡す。
+          local target = mypy_targets_configured(project_root()) and "" or " ."
+          run_in_root("uv run --with mypy mypy" .. target)
+        end,
+        desc = "uv: mypy (プロジェクト)",
       },
       {
         "<leader>cx",
