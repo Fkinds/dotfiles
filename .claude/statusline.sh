@@ -3,17 +3,10 @@
 # 三角区切り () と git アイコン () は Nerd Font / Powerline フォントが必要。
 input=$(cat)
 
-# nvim-tree に揃える: nvim の :terminal 内なら $NVIM 経由で nvim の cwd を取得する。
-# nvim-tree は cwd をルートに表示するため、これで常にツリー側と一致する。
-dir=""
-if [ -n "$NVIM" ] && command -v nvim >/dev/null 2>&1; then
-  dir=$(timeout 1 nvim --server "$NVIM" --remote-expr 'getcwd()' 2>/dev/null)
-fi
-
-# フォールバック: nvim 外なら Claude Code の project_dir → current_dir を使う。
-if [ -z "$dir" ]; then
-  dir=$(printf '%s' "$input" | python3 -c "import sys,json; w=json.load(sys.stdin).get('workspace',{}); print(w.get('project_dir') or w.get('current_dir',''))" 2>/dev/null)
-fi
+# Claude Code が今いるディレクトリでブランチを見る。worktree や cd での移動にも追従する。
+# project_dir は起動時の場所で固定、nvim の getcwd() は claudecode.nvim の cwd_provider
+# (バッファのプロジェクトルート)とずれるので、どちらも使わない。
+dir=$(printf '%s' "$input" | jq -r '.workspace.current_dir // empty' 2>/dev/null)
 [ -n "$dir" ] && cd "$dir" 2>/dev/null
 
 # フルパスではなく git リポジトリ名（= toplevel の basename）だけを出す。
